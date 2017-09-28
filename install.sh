@@ -4,10 +4,10 @@
 
 	USER ='VWM-user' #Your username here
 	PASSWD ='123' # Your password here
-	sed '/<Directory \/var\/www\html>/,/<\/Directory>/ s/AllowOverride None/AllowOverride AuthConfig/' /etc/httpd/conf/httpd.conf 
+	#sed '/<Directory \/var\/www\html>/,/<\/Directory>/ s/AllowOverride None/AllowOverride AuthConfig/' /etc/httpd/conf/httpd.conf 
 	htpasswd  -c -b /etc/httpd/.htpasswd $USER $PASSWD
-	echo AuthType Basic\nAuthName "Restricted Content"\nAuthUserFile /etc/httpd/.htpasswd\nRequire $USER > /var/www/html/vwm/.htaccess
-	apachectl restart
+	#echo AuthType Basic\nAuthName "Restricted Content"\nAuthUserFile /etc/httpd/.htpasswd\nRequire $USER > /var/www/html/vwm/.htaccess
+	#apachectl restart
 	
 #Update 
 	#yum -y update && yum -y upgrade 
