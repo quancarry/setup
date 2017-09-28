@@ -63,7 +63,7 @@
 	USER ='VWM-user' #Your username here
 	PASSWD ='123' # Your password here
 	sed '/<Directory \/var\/www\html/>/,/<\/Directory>/ s/AllowOverride None/AllowOverride AuthConfig/' /etc/httpd/conf/httpd.conf 
-	echo '$PASSWD\n$PASSWD' | htpasswd -c /etc/httpd/.htpasswd $USER
+	htpasswd -b -c /etc/httpd/.htpasswd $USER $PASSWD
 	echo AuthType Basic\nAuthName "Restricted Content"\nAuthUserFile /etc/httpd/.htpasswd\nRequire $USER > /var/www/html/vwm/.htaccess
 	apachectl restart
 	
