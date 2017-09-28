@@ -57,7 +57,7 @@
 	
 	#Define root path
 	
-		$VM_path=/var/www/html/vwm
+		#$VM_path=/var/www/html/vwm
 
 #config ssl
 #
@@ -95,5 +95,5 @@
 	
 # Config Logrotate
 
-	sed  -i -e 's/$/\n "/var/log/httpd/web_access.log" /var/log/httpd/error.log{ \n rotate 5 \n size 20M}  /' /etc/logrotate.conf
+	sed  -i -e '$a\\n"/var/log/httpd/web_access.log" /var/log/httpd/error.log{ \n rotate 5 \n size 20M}  /' /etc/logrotate.conf
 	
