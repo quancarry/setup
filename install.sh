@@ -85,8 +85,8 @@
 
 #Access log name
 	
-	sed -i '/ErrorLog "logs/error.log"/  c\ErrorLog "logs/error.log"' /etc/httpd/http.conf
-	sed -i '/CustomLog "logs/access.log" combined c\CustomLog "logs/web_access.log" combined' /etc/httpd/http.conf
+	sed -i '/ErrorLog "logs/error.log"/  c\ErrorLog "logs/error.log"' /etc/httpd/conf/http.conf
+	sed -i '/CustomLog "logs/access.log" combined c\CustomLog "logs/web_access.log" combined' /etc/httpd/conf/http.conf
 	
 # Config Logrotate
 
