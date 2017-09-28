@@ -2,9 +2,9 @@
 
 #Enable Authentication 
 	#Your username here
-	USER ='VWM-user' 
+	USER='VWM-user' 
 	# Your password here
-	PASSWD ='12345' 
+	PASSWD='12345' 
 	htpasswd -c -b /etc/httpd/.htpasswd $USER @PASSWD
 	#sed '/<Directory \/var\/www\html>/,/<\/Directory>/ s/AllowOverride None/AllowOverride AuthConfig/' /etc/httpd/conf/httpd.conf 
 	
