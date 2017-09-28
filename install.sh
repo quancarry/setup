@@ -1,33 +1,35 @@
 # !bin/bash
 
 #Update 
-	yum -y update && yum -y upgrade 
+	#yum -y update && yum -y upgrade 
 	
 #Change hostname
 
-	hostnamectl set-hostname VWM
+	#hostnamectl set-hostname VWM
 
 #Install ssh
 
-	yum -y install openssh-server openssh-clients
-	systemctl restart sshd.service
+	#yum -y install openssh-server openssh-clients
+	#systemctl restart sshd.service
 
 #install Apache
 
-	yum -y install httpd
+	#yum -y install httpd
 	
 #install mysql(mariadb)
 
-	yum -y install mariadb-server mariadb
+	#yum -y install mariadb-server mariadb
 
 #Enable webserver
-
-	systemctl start mariadb
-	systemctl enable mariadb.service
+	#for centos 7
+	#systemctl start mariadb
+	#systemctl enable mariadb.service
 	
-	systemctl enable httpd.service
-	systemctl start httpd.service
-	
+	#systemctl enable httpd.service
+	#systemctl start httpd.service
+	#for centos 6.5
+	service httpd restart
+	service mysqld restart
 #install php
 
 	yum -y install php php-mysql
