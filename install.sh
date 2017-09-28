@@ -53,7 +53,7 @@
 
 	#Create owner dictionary
 	
-		mkdir /var/www/html/vwm
+		#mkdir /var/www/html/vwm
 	
 	#Define root path
 	
