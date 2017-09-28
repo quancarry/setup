@@ -33,7 +33,7 @@
 	yum -y install php php-mysql
 #config mysql
 
-	dbpass=abc@123
+	dbpass='abc@123'
 	echo -e "\ny\ny\n$dbpass\n$dbpass\ny\ny\ny\ny" | /usr/bin/mysql_secure_installation
 
 #VWM path : 
@@ -60,10 +60,10 @@
 
 #Enable Authentication 
 
-	USER =VWM-user #Your username here
-	PASSWD =123 # Your password here
+	USER ='VWM-user' #Your username here
+	PASSWD ='123' # Your password here
 	sed '/<Directory \/var\/www\html/>/,/<\/Directory>/ s/AllowOverride None/AllowOverride AuthConfig/' /etc/httpd/conf/httpd.conf 
-	echo '$PASSWD\n$PASSWD' | htpasswd  /etc/httpd/.htpasswd $USER
+	echo '$PASSWD\n$PASSWD' | htpasswd -c /etc/httpd/.htpasswd $USER
 	echo AuthType Basic\nAuthName "Restricted Content"\nAuthUserFile /etc/httpd/.htpasswd\nRequire $USER > /var/www/html/vwm/.htaccess
 	apachectl restart
 	
