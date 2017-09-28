@@ -69,7 +69,7 @@
 
 #Enable .htaccess
 
-	sed '/<Directory \/var\/www\/>/,/<\/Directory>/ s/AllowOverride None/AllowOverride all/' /etc/httpd/conf/httpd.conf
+	sed -n '/<Directory \/var\/www\/>/,/<\/Directory>/ s/AllowOverride None/AllowOverride all/' /etc/httpd/conf/httpd.conf
 
 
 #Enable iptables
@@ -90,10 +90,10 @@
 
 #Access log name
 	
-	sed -i '/ErrorLog "logs/error.log"/  c\ErrorLog "logs/error.log"' /etc/httpd/conf/http.conf
-	sed -i '/CustomLog "logs/access.log" combined c\CustomLog "logs/web_access.log" combined' /etc/httpd/conf/http.conf
+	sed -n '/ErrorLog "logs/error.log"/  c\ErrorLog "logs/error.log"' /etc/httpd/conf/http.conf
+	sed -n '/CustomLog "logs/access.log" combined c\CustomLog "logs/web_access.log" combined' /etc/httpd/conf/http.conf
 	
 # Config Logrotate
 
-	sed -i 's/$/\n "/var/log/httpd/web_access.log" /var/log/httpd/error.log{ \n rotate 5 \n size 20M}  /' /etc/logrotate.conf
+	sed  -n 's/$/\n "/var/log/httpd/web_access.log" /var/log/httpd/error.log{ \n rotate 5 \n size 20M}  /' /etc/logrotate.conf
 	
