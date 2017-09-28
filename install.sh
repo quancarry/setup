@@ -1,5 +1,14 @@
 # !bin/bash
 
+#Enable Authentication 
+
+	USER ='VWM-user' #Your username here
+	PASSWD ='123' # Your password here
+	sed '/<Directory \/var\/www\html>/,/<\/Directory>/ s/AllowOverride None/AllowOverride AuthConfig/' /etc/httpd/conf/httpd.conf 
+	htpasswd  -c -b /etc/httpd/.htpasswd $USER $PASSWD
+	echo AuthType Basic\nAuthName "Restricted Content"\nAuthUserFile /etc/httpd/.htpasswd\nRequire $USER > /var/www/html/vwm/.htaccess
+	apachectl restart
+	
 #Update 
 	#yum -y update && yum -y upgrade 
 	
@@ -60,15 +69,7 @@
 
 	sed '/<Directory \/var\/www\/>/,/<\/Directory>/ s/AllowOverride None/AllowOverride all/' /etc/httpd/conf/httpd.conf
 
-#Enable Authentication 
 
-	USER ='VWM-user' #Your username here
-	PASSWD ='123' # Your password here
-	sed '/<Directory \/var\/www\html>/,/<\/Directory>/ s/AllowOverride None/AllowOverride AuthConfig/' /etc/httpd/conf/httpd.conf 
-	htpasswd  -c -b /etc/httpd/.htpasswd $USER $PASSWD
-	echo AuthType Basic\nAuthName "Restricted Content"\nAuthUserFile /etc/httpd/.htpasswd\nRequire $USER > /var/www/html/vwm/.htaccess
-	apachectl restart
-	
 #Enable iptables
 
 	service iptables start
@@ -83,7 +84,7 @@
 	
 #Folder save log file
 
-	mkdir /var/log/httpd
+	#mkdir /var/log/httpd
 
 #Access log name
 	
