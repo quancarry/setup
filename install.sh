@@ -19,15 +19,22 @@
 #install mysql(mariadb)
 
 	yum -y install mariadb-server mariadb
-	
-#config mysql
 
-	dbpass=abc@123
-	echo -e "\ny\ny\n$dbpass\n$dbpass\ny\ny\ny\ny" | /usr/bin/mysql_secure_installation
+#Enable webserver
+
+	systemctl start mariadb
+	systemctl enable mariadb.service
+	
+	systemctl enable httpd.service
+	systemctl start httpd.service
 	
 #install php
 
 	yum -y install php php-mysql
+#config mysql
+
+	dbpass=abc@123
+	echo -e "\ny\ny\n$dbpass\n$dbpass\ny\ny\ny\ny" | /usr/bin/mysql_secure_installation
 
 #VWM path : 
 
@@ -38,14 +45,6 @@
 	#Define root path
 	
 		$VM_path=/var/www/html/vwm
-
-#Enable webserver
-
-	systemctl start mariadb
-	systemctl enable mariadb.service
-	
-	systemctl enable httpd.service
-	systemctl start httpd.service
 
 #config ssl
 #
