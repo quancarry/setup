@@ -1,7 +1,7 @@
 # !bin/bash
 
 #Update 
-
+	echo '=== Intallation Packages ====='
 	yum -y update && yum -y upgrade 
 
 
@@ -194,13 +194,13 @@ RELEASE=`cat /etc/redhat-release`
 
 SUBSTR=`echo $RELEASE|cut -c1-22`
 
-if ["$SUBSTR" == "CentOS Linux release 7"];
+if [[ "$SUBSTR" == "CentOS release 7" ]];
 
 then 
+	echo '===== Detected Centos OS 7.* ======'
 	func_install_centos7
-	echo 'Detected Centos OS 7'
-
 else 
+	echo '===== Detected Centos OS 6.* ======'
 	func_install_centos6
 fi
 	
