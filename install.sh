@@ -1,35 +1,24 @@
 # !bin/bash
 
-#Enable Authentication 
-	#Your username here
-	USER='VWM-user' 
-	# Your password here
-	PASSWD='12345' 
-	htpasswd -c -b /etc/httpd/.htpasswd $USER @PASSWD
-	#sed '/<Directory \/var\/www\html>/,/<\/Directory>/ s/AllowOverride None/AllowOverride AuthConfig/' /etc/httpd/conf/httpd.conf 
-	
-	#echo AuthType Basic\nAuthName "Restricted Content"\nAuthUserFile /etc/httpd/.htpasswd\nRequire $USER > /var/www/html/vwm/.htaccess
-	#apachectl restart
-	
 #Update 
-	#yum -y update && yum -y upgrade 
+	yum -y update && yum -y upgrade 
 	
 #Change hostname
 
-	#hostnamectl set-hostname VWM
+	hostnamectl set-hostname VWM
 
 #Install ssh
 
-	#yum -y install openssh-server openssh-clients
-	#systemctl restart sshd.service
+	yum -y install openssh-server openssh-clients
+	systemctl restart sshd.service
 
 #install Apache
 
-	#yum -y install httpd
+	yum -y install httpd
 	
 #install mysql(mariadb)
 
-	#yum -y install mariadb-server mariadb
+	yum -y install mariadb-server mariadb
 
 #Enable webserver
 	#for centos 7
@@ -44,16 +33,26 @@
 #install php
 
 	yum -y install php php-mysql
+	
 #config mysql
 
 	dbpass='abc@123'
 	echo -e "\ny\ny\n$dbpass\n$dbpass\ny\ny\ny\ny" | /usr/bin/mysql_secure_installation
 
+#Enable Authentication 
+	
+	USER='VWM-user' 
+	PASSWD='12345' 
+	htpasswd -c -b /etc/httpd/.htpasswd $USER @PASSWD
+	sed '/<Directory \/var\/www\html>/,/<\/Directory>/ s/AllowOverride None/AllowOverride AuthConfig/' /etc/httpd/conf/httpd.conf 
+	echo AuthType Basic\nAuthName "Restricted Content"\nAuthUserFile /etc/httpd/.htpasswd\nRequire $USER > /var/www/html/vwm/.htaccess
+	apachectl restart
+	
 #VWM path : 
 
 	#Create owner dictionary
 	
-		#mkdir /var/www/html/vwm
+		mkdir /var/www/html/vwm
 	
 	#Define root path
 	
