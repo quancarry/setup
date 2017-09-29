@@ -1,10 +1,6 @@
 # !bin/bash
 
 #Update 
-	yum -y update && yum -y upgrade 
-	# !bin/bash
-
-#Update 
 
 	yum -y update && yum -y upgrade 
 
