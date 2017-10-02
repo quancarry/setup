@@ -94,8 +94,8 @@ func_install_centos6(){
 	#Enable ssh
 		if [[ "$server_ssh" == 1]];
 			then
-			#yum -y install openssh-server openssh-clients
-			service sshd start
+				#yum -y install openssh-server openssh-clients
+				service sshd start
 		fi
 		
 	#Enable Apache
@@ -167,9 +167,9 @@ func_install_centos6(){
 
 		# use for loop to read all values and indexes
 		for (( i=1; i<${arraylength}+1; i++ ));
-		do
-		  iptables -A INPUT -p tcp -m tcp --dport ${fw_allow_port[$i]} -j ACCEPT
-		done
+			do
+			  iptables -A INPUT -p tcp -m tcp --dport ${fw_allow_port[$i]} -j ACCEPT
+			done
 		
 		service iptables start
 		
