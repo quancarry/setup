@@ -106,6 +106,7 @@ func_install_centos6(){
 			then
 				echo '===== Enable Apache ======'
 				#yum -y install httpd
+				sed -i 's/#ServerName.*/ServerName:$web_port/' /etc/httpd/conf/http_conf
 				service httpd start
 		fi
 	#Enable mysql(mariadb)
@@ -182,7 +183,7 @@ func_install_centos6(){
 		echo '===== Start iptables ======'
 		service iptables start
 	#Port webserver 
-		sed -i 's/Listen[[:space:]].*/Listen "$web_port"/' /etc/httpd/conf/http_conf
+		sed -i 's/Listen[[:space:]].*/Listen $web_port/' /etc/httpd/conf/http_conf
 		service httpd restart
 	#Folder save log file
 
