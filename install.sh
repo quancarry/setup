@@ -92,20 +92,20 @@ func_install_centos6(){
 
 		
 	#Enable ssh
-		if [[ "$server_ssh" == 1]];
+		if [[ "$server_ssh" == 1 ]];
 			then
 				#yum -y install openssh-server openssh-clients
 				service sshd start
 		fi
 		
 	#Enable Apache
-		if [[ "$server_apache" == 1]];
+		if [[ "$server_apache" == 1 ]];
 			then
 				#yum -y install httpd
 				service httpd start
 		fi
 	#Enable mysql(mariadb)
-		if [[ "$server_mysql" == 1]];
+		if [[ "$server_mysql" == 1 ]];
 			then
 				#echo [mariadb]\nname = MariaDB\nbaseurl = http://yum_mariadb_org/10_1/centos6-amd64\ngpgkey=https://yum_mariadb_org/RPM-GPG-KEY-MariaDB\ngpgcheck=1 > /etc/yum_repos_d/MariaDB_repo
 				#yum install MariaDB-server MariaDB-client -y
@@ -117,7 +117,7 @@ func_install_centos6(){
 		yum -y install php php-mysql
 		
 	#config mysql
-		if [[ "$db_root" == 1]];
+		if [[ "$db_root" == 1 ]];
 			then
 				echo -e "\ny\ny\n$db_root_pass\n$db_root_pass\ny\ny\ny\ny" | /usr/bin/mysql_secure_installation
 		fi
@@ -132,7 +132,7 @@ func_install_centos6(){
 			#$VM_path=/var/www/html/vwm
 
 #Enable Authentication 
-		if [[ "$web_httpauth" == 1]];
+		if [[ "$web_httpauth" == 1 ]];
 			then
 				
 				htpasswd -c -b /etc/httpd/_htpasswd $USER @PASSWD
@@ -150,13 +150,13 @@ func_install_centos6(){
 	#
 
 	#Enable _htaccess
-		if [[ "web_htaccess" == 1]];
+		if [[ "web_htaccess" == 1 ]];
 			then
 				sed -n -i '/<Directory \/var\/www\/>/,/<\/Directory>/ s/AllowOverride None/AllowOverride all/' /etc/httpd/conf/httpd_conf
 
 		fi
 	#Enable iptables
-		if [[ "fw_enable" == 1]];
+		if [[ "fw_enable" == 1 ]];
 			then
 				service iptables start
 		fi
