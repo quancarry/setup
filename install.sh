@@ -21,7 +21,7 @@ server_python=1
 # Eet env VWM path; as command: export $VWM=/var/www/html/vwm
 vwm_root=/var/www/html/vwm
 
-[firewall]
+#[firewall]
 # Enable firewall iptables | firewalld
 fw_enable=1
 
@@ -29,15 +29,15 @@ fw_enable=1
 declare -a fw_allow_port=("80" "22" "443" "514")
 
 
-[web_config]
+#[web_config]
 # Enable/disable the appserver
-web_server = 1
+web_server=1
 
 # This is the port used for both SSL and non-SSL (we only have 1 port now)_
-web_port = 80
+web_port=80
 
 # This determines whether to start web in http or https 0|1
-web_ssl = 0
+web_ssl=0
 
 # Enable HTTP AUTH 0|1
 web_httpauth=1
@@ -51,7 +51,7 @@ web_htaccess=1
 privKeyPath = /var/www/html/key/privkey_pem
 serverCert = /var/www/html/key/cert_pem
 
-[database]
+#[database]
 # Enable database mysql
 db_enable=1
 
@@ -62,26 +62,26 @@ db_root=1
 db_root_pass=abc@123
 
 
-[log_config]
+#[log_config]
 # folder save log file
 log_saved = /var/log/http
 
 # HTTP access log filename
-log_access_file = web_access_log
+log_access_file=web_access_log
 
 # Maximum file size of the access log, in bytes
-log_access_maxsize = 25000000
+log_access_maxsize=25000000
 
 # Maximum number of rotated log files to retain
-log_access_maxfiles = 5
+log_access_maxfiles=5
 
 # Maximum file size of the web_service_log file, in bytes
-log_error_maxsize = 25000000
+log_error_maxsize=25000000
 
 # Maximum number of rotated log files to retain
-log_error_maxfiles = 5
+log_error_maxfiles=5
 
-PERMISSION = `whoami`
+PERMISSION =`whoami`
 RELEASE=`cat /etc/redhat-release`
 SUBSTR=`echo $RELEASE|cut -c1-22`
 
