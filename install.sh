@@ -106,7 +106,7 @@ func_install_centos6(){
 			then
 				echo '===== Enable Apache ======'
 				#yum -y install httpd
-				sed -i 's/#ServerName.*/ServerName:$web_port/' /etc/httpd/conf/http_conf
+				sed -i 's/#ServerName.*/ServerName localhost:$web_port/' /etc/httpd/conf/http_conf
 				service httpd start
 		fi
 	#Enable mysql(mariadb)
