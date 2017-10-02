@@ -1,7 +1,7 @@
 # !bin/bash
 #[default]
 # set Hostname
-server_hostname =VWM
+server_hostname=VWM
 
 # Enable sshd 0|1
 server_ssh=1
@@ -48,8 +48,8 @@ PASSWD='12345'
 web_htaccess=1
 
 # SSL certificate files_
-privKeyPath = /var/www/html/key/privkey_pem
-serverCert = /var/www/html/key/cert_pem
+privKeyPath=/var/www/html/key/privkey_pem
+serverCert=/var/www/html/key/cert_pem
 
 #[database]
 # Enable database mysql
@@ -64,7 +64,7 @@ db_root_pass=abc@123
 
 #[log_config]
 # folder save log file
-log_saved = /var/log/http
+log_saved=/var/log/http
 
 # HTTP access log filename
 log_access_file=web_access_log
@@ -81,7 +81,7 @@ log_error_maxsize=25000000
 # Maximum number of rotated log files to retain
 log_error_maxfiles=5
 
-PERMISSION =`whoami`
+PERMISSION=`whoami`
 RELEASE=`cat /etc/redhat-release`
 SUBSTR=`echo $RELEASE|cut -c1-22`
 
@@ -89,8 +89,7 @@ func_install_centos6(){
 
 	#Change hostname
 		
-		
-		
+
 		
 	#Enable ssh
 		if [[ "$server_ssh" == 1]];
