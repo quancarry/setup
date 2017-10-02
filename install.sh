@@ -90,7 +90,7 @@ func_install_centos6(){
 	#Change hostname
 	echo '===== Set hostname ======'	
 	sed -i 's/HOSTNAME=.*/HOSTNAME=$server_hostname/' /etc/sysconfig/network
-	sed -i '1 i\127.0.0.1   $server_hostname' /etc/hosts
+	sed -i '1 i\127.0.0.1   $server_hostname $server_hostname' /etc/hosts
 	hostname $server_hostname
 		
 	#Enable ssh
@@ -196,6 +196,8 @@ func_install_centos6(){
 	# Config Logrotate
 		echo '===== Config Logrotate ======'
 		sed  -i -e '$a\\n"/var/log/httpd/web_access_log" /var/log/httpd/error_log{ \n rotate $log_access_maxfiles \n size $log_access_maxsize}  /' /etc/logrotate_conf
+	echo '===== Config Successfully ======'
+	bash
 	}
 
 
