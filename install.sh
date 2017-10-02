@@ -89,8 +89,8 @@ func_install_centos6(){
 
 	#Change hostname
 	echo '===== Set hostname ======'	
-	sed -i 's/HOSTNAME=.*/HOSTNAME=$server_hostname/' /etc/sysconfig/network
-	sed -i '1 i\127.0.0.1   $server_hostname $server_hostname' /etc/hosts
+	sed -i "s/HOSTNAME=.*/HOSTNAME=$server_hostname/p" /etc/sysconfig/network
+	sed -i "1 i\127.0.0.1   $server_hostname $server_hostname /p" /etc/hosts
 	hostname $server_hostname
 		
 	#Enable ssh
@@ -106,7 +106,7 @@ func_install_centos6(){
 			then
 				echo '===== Enable Apache ======'
 				#yum -y install httpd
-				sed -i 's/#ServerName.*/ServerName localhost:$web_port/' /etc/httpd/conf/http.conf
+				sed -i "s/#ServerName.*/ServerName localhost:$web_port/p" /etc/httpd/conf/http.conf
 				service httpd start
 		fi
 	#Enable mysql(mariadb)
@@ -183,7 +183,7 @@ func_install_centos6(){
 		echo '===== Start iptables ======'
 		service iptables start
 	#Port webserver 
-		sed -i 's/Listen[[:space:]].*/Listen $web_port/' /etc/httpd/conf/http.conf
+		sed -i "s/Listen[[:space:]].*/Listen $web_port/" /etc/httpd/conf/http.conf
 		service httpd restart
 	#Folder save log file
 
