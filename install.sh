@@ -106,7 +106,7 @@ func_install_centos6(){
 			then
 				echo '===== Enable Apache ======'
 				#yum -y install httpd
-				sed -i 's/#ServerName.*/ServerName localhost:$web_port/' /etc/httpd/conf/http_conf
+				sed -i 's/#ServerName.*/ServerName localhost:$web_port/' /etc/httpd/conf/http.conf
 				service httpd start
 		fi
 	#Enable mysql(mariadb)
@@ -142,9 +142,9 @@ func_install_centos6(){
 		if [[ "$web_httpauth" == 1 ]];
 			then
 				echo '===== Config Authentication ======'
-				htpasswd -c -b /etc/httpd/_htpasswd $USER @PASSWD
-				sed '/<Directory \/var\/www\html>/,/<\/Directory>/ s/AllowOverride None/AllowOverride AuthConfig/' /etc/httpd/conf/httpd_conf 
-				echo AuthType Basic\nAuthName "Restricted Content"\nAuthUserFile /etc/httpd/_htpasswd\nRequire $USER > /var/www/html/vwm/_htaccess
+				htpasswd -c -b /etc/httpd/.htpasswd $USER @PASSWD
+				sed '/<Directory \/var\/www\html>/,/<\/Directory>/ s/AllowOverride None/AllowOverride AuthConfig/' /etc/httpd/conf/httpd.conf 
+				echo AuthType Basic\nAuthName "Restricted Content"\nAuthUserFile /etc/httpd/.htpasswd\nRequire $USER > /var/www/html/vwm/.htaccess
 				service httpd restart
 		fi
 	
@@ -160,7 +160,7 @@ func_install_centos6(){
 		if [[ "web_htaccess" == 1 ]];
 			then
 				echo '==== Enable .htaccess ======'
-				sed -n -i '/<Directory \/var\/www\/>/,/<\/Directory>/ s/AllowOverride None/AllowOverride all/' /etc/httpd/conf/httpd_conf
+				sed -n -i '/<Directory \/var\/www\/>/,/<\/Directory>/ s/AllowOverride None/AllowOverride all/' /etc/httpd/conf/httpd.conf
 
 		fi
 	#Enable iptables
@@ -183,7 +183,7 @@ func_install_centos6(){
 		echo '===== Start iptables ======'
 		service iptables start
 	#Port webserver 
-		sed -i 's/Listen[[:space:]].*/Listen $web_port/' /etc/httpd/conf/http_conf
+		sed -i 's/Listen[[:space:]].*/Listen $web_port/' /etc/httpd/conf/http.conf
 		service httpd restart
 	#Folder save log file
 
@@ -191,11 +191,11 @@ func_install_centos6(){
 
 	#Access log name
 		echo '===== Logname ======'
-		sed -i -e 's#CustomLog "logs/access_log" combined#CustomLog "logs/$log_access_file" combined#' /etc/httpd/conf/http_conf
+		sed -i -e 's#CustomLog "logs/access_log" combined#CustomLog "logs/$log_access_file" combined#' /etc/httpd/conf/http.conf
 		
 	# Config Logrotate
 		echo '===== Config Logrotate ======'
-		sed  -i -e '$a\\n"/var/log/httpd/web_access_log" /var/log/httpd/error_log{ \n rotate $log_access_maxfiles \n size $log_access_maxsize}  /' /etc/logrotate_conf
+		sed  -i -e '$a\\n"/var/log/httpd/web_access_log" /var/log/httpd/error_log{ \n rotate $log_access_maxfiles \n size $log_access_maxsize}  /' /etc/logrotate.conf
 	echo '===== Config Successfully ======'
 	bash
 	}
