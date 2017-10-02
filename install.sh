@@ -1,104 +1,89 @@
-# !bin/bash
+[default]
+# set Hostname
+server.hostname =VWM
 
-#Update 
-	echo '=== Intallation Packages ====='
-	yum -y update && yum -y upgrade 
+# Enable sshd 0|1
+server.ssh=1
 
+# Enable service apache  0|1
+server.apache=1
 
-func_install_centos7(){
+# Enable service mysql 0|1
+server.mysql=1
 
-	#Change hostname
-		
-		hostnamectl set-hostname VWM
-		
-		
-	#Install ssh
+# Enable service php 0|1
+server.php=1
 
-		yum -y install openssh-server openssh-clients
-		
-		systemctl restart sshd.service
-		
-	#install Apache
+# Enable python env 0|1
+server.python=1
 
-		yum -y install httpd
-		
-	#install mysql(mariadb)
+# Eet env VWM path; as command: export $VWM=/var/www/html/vwm
+vwm.root=/var/www/html/vwm
 
-		yum -y install mariadb-server mariadb
+[firewall]
+# Enable firewall iptables | firewalld
+fw.enable=1
 
-	#Enable webserver
-		
-		systemctl start mariadb
-		systemctl enable mariadb.service
-		
-		systemctl enable httpd.service
-		systemctl start httpd.service
-		
-	#install php
-
-		yum -y install php php-mysql
-		
-	#config mysql
-
-		dbpass='abc@123'
-		echo -e "\ny\ny\n$dbpass\n$dbpass\ny\ny\ny\ny" | /usr/bin/mysql_secure_installation
-
-	#Enable Authentication 
-		
-		USER='VWM-user' 
-		PASSWD='12345' 
-		htpasswd -c -b /etc/httpd/.htpasswd $USER @PASSWD
-		sed '/<Directory \/var\/www\html>/,/<\/Directory>/ s/AllowOverride None/AllowOverride AuthConfig/' /etc/httpd/conf/httpd.conf 
-		echo AuthType Basic\nAuthName "Restricted Content"\nAuthUserFile /etc/httpd/.htpasswd\nRequire $USER > /var/www/html/vwm/.htaccess
-		apachectl restart
-		
-	#VWM path : 
-
-		#Create owner dictionary
-		
-			mkdir /var/www/html/vwm
-		
-		#Define root path
-		
-			#$VM_path=/var/www/html/vwm
-
-	#config ssl
-	#
-	#
-	#
-	#
-	#
-	#
-
-	#Enable .htaccess
-
-		sed -n -i '/<Directory \/var\/www\/>/,/<\/Directory>/ s/AllowOverride None/AllowOverride all/' /etc/httpd/conf/httpd.conf
+# List open ports
+declare -a fw.allow_port=("80" "22" "443" "514")
 
 
-	#Enable iptables
+[web_config]
+# Enable/disable the appserver
+web.server = 1
 
-		service iptables start
+# This is the port used for both SSL and non-SSL (we only have 1 port now).
+web.port = 80
 
-	#Iptable allows ports:
-		
-		iptables -A INPUT -p tcp -m tcp --dport 80 -j ACCEPT
-		iptables -A INPUT -p tcp -m tcp --dport 22 -j ACCEPT
-		iptables -A INPUT -p tcp -m tcp --dport 443 -j ACCEPT
-		iptables -A INPUT -p tcp -m tcp --dport 514 -j ACCEPT
-		service iptables start
-		
-	#Folder save log file
+# This determines whether to start web in http or https 0|1
+web.ssl = 0
 
-		#mkdir /var/log/httpd
+# Enable HTTP AUTH 0|1
+web.httpauth=1
+USER='VWM-user' 
+PASSWD='12345' 
 
-	#Access log name
+# Enable htaccess 0|1
+web.htaccess=1
 
-		sed -i -e 's#CustomLog "logs/access.log" combined#CustomLog "logs/web_access.log" combined#' /etc/httpd/conf/http.conf
-		
-	# Config Logrotate
+# SSL certificate files.
+privKeyPath = /var/www/html/key/privkey.pem
+serverCert = /var/www/html/key/cert.pem
 
-		sed  -i -e '$a\\n"/var/log/httpd/web_access.log" /var/log/httpd/error.log{ \n rotate 5 \n size 20M}  /' /etc/logrotate.conf
-	}
+[database]
+# Enable database mysql
+db.enable=1
+
+# Enable root account
+db.root=1
+
+# Set password
+db.root_pass=abc@123
+
+
+[log_config]
+# folder save log file
+log.saved = /var/log/http
+
+# HTTP access log filename
+log.access_file = web_access.log
+
+# Maximum file size of the access log, in bytes
+log.access_maxsize = 25000000
+
+# Maximum number of rotated log files to retain
+log.access_maxfiles = 5
+
+# Maximum file size of the web_service.log file, in bytes
+log.error_maxsize = 25000000
+
+# Maximum number of rotated log files to retain
+log.error_maxfiles = 5
+
+PERMISSION = `whoami`
+RELEASE=`cat /etc/redhat-release`
+SUBSTR=`echo $RELEASE|cut -c1-22`
+
 func_install_centos6(){
 
 	#Change hostname
@@ -106,44 +91,37 @@ func_install_centos6(){
 		
 		
 		
-	#Install ssh
+	#Enable ssh
+		if [[ "$server.ssh" == 1]];
+			then
+			#yum -y install openssh-server openssh-clients
+			service sshd start
+		fi
+		
+	#Enable Apache
+		if [[ "$server.apache" == 1]];
+			then
+				#yum -y install httpd
+				service httpd start
+		fi
+	#Enable mysql(mariadb)
+		if [[ "$server.mysql" == 1]];
+			then
+				#echo [mariadb]\nname = MariaDB\nbaseurl = http://yum.mariadb.org/10.1/centos6-amd64\ngpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB\ngpgcheck=1 > /etc/yum.repos.d/MariaDB.repo
+				#yum install MariaDB-server MariaDB-client -y
+				service mysqld start
+		fi
 
-		yum -y install openssh-server openssh-clients
-		
-		service sshd start
-		
-	#install Apache
-
-		yum -y install httpd
-		
-	#install mysql(mariadb)
-
-		yum -y install mariadb-server mariadb
-
-	#Enable webserver
-		
-		service httpd start
-		service mysqld start
-		
 	#install php
 
 		yum -y install php php-mysql
 		
 	#config mysql
-
-		dbpass='abc@123'
-		echo -e "\ny\ny\n$dbpass\n$dbpass\ny\ny\ny\ny" | /usr/bin/mysql_secure_installation
-
-	#Enable Authentication 
-		
-		USER='VWM-user' 
-		PASSWD='12345' 
-		htpasswd -c -b /etc/httpd/.htpasswd $USER @PASSWD
-		sed '/<Directory \/var\/www\html>/,/<\/Directory>/ s/AllowOverride None/AllowOverride AuthConfig/' /etc/httpd/conf/httpd.conf 
-		echo AuthType Basic\nAuthName "Restricted Content"\nAuthUserFile /etc/httpd/.htpasswd\nRequire $USER > /var/www/html/vwm/.htaccess
-		apachectl restart
-		
-	#VWM path : 
+		if [[ "$db.root" == 1]];
+			then
+				echo -e "\ny\ny\n$db.root_pass\n$db.root_pass\ny\ny\ny\ny" | /usr/bin/mysql_secure_installation
+		fi
+#VWM path : 
 
 		#Create owner dictionary
 		
@@ -153,6 +131,16 @@ func_install_centos6(){
 		
 			#$VM_path=/var/www/html/vwm
 
+#Enable Authentication 
+		if [[ "$web.httpauth" == 1]];
+			then
+				
+				htpasswd -c -b /etc/httpd/.htpasswd $USER @PASSWD
+				sed '/<Directory \/var\/www\html>/,/<\/Directory>/ s/AllowOverride None/AllowOverride AuthConfig/' /etc/httpd/conf/httpd.conf 
+				echo AuthType Basic\nAuthName "Restricted Content"\nAuthUserFile /etc/httpd/.htpasswd\nRequire $USER > /var/www/html/vwm/.htaccess
+				apachectl restart
+		fi
+	
 	#config ssl
 	#
 	#
@@ -162,45 +150,54 @@ func_install_centos6(){
 	#
 
 	#Enable .htaccess
+		if [[ "web.htaccess" == 1]];
+			then
+				sed -n -i '/<Directory \/var\/www\/>/,/<\/Directory>/ s/AllowOverride None/AllowOverride all/' /etc/httpd/conf/httpd.conf
 
-		sed -n -i '/<Directory \/var\/www\/>/,/<\/Directory>/ s/AllowOverride None/AllowOverride all/' /etc/httpd/conf/httpd.conf
-
-
+		fi
 	#Enable iptables
-
-		service iptables start
-
+		if [[ "fw.enable" == 1]];
+			then
+				service iptables start
+		fi
 	#Iptable allows ports:
 		
-		iptables -A INPUT -p tcp -m tcp --dport 80 -j ACCEPT
-		iptables -A INPUT -p tcp -m tcp --dport 22 -j ACCEPT
-		iptables -A INPUT -p tcp -m tcp --dport 443 -j ACCEPT
-		iptables -A INPUT -p tcp -m tcp --dport 514 -j ACCEPT
+		# get length of an array
+		arraylength=${#fw.allow_port[@]}
+
+		# use for loop to read all values and indexes
+		for (( i=1; i<${arraylength}+1; i++ ));
+		do
+		  iptables -A INPUT -p tcp -m tcp --dport ${fw.allow_port[$i]} -j ACCEPT
+		done
+		
 		service iptables start
 		
 	#Folder save log file
 
-		#mkdir /var/log/httpd
+		$log.saved
 
 	#Access log name
 
-		sed -i -e 's#CustomLog "logs/access.log" combined#CustomLog "logs/web_access.log" combined#' /etc/httpd/conf/http.conf
+		sed -i -e 's#CustomLog "logs/access.log" combined#CustomLog "logs/$log.access_file" combined#' /etc/httpd/conf/http.conf
 		
 	# Config Logrotate
 
-		sed  -i -e '$a\\n"/var/log/httpd/web_access.log" /var/log/httpd/error.log{ \n rotate 5 \n size 20M}  /' /etc/logrotate.conf
+		sed  -i -e '$a\\n"/var/log/httpd/web_access.log" /var/log/httpd/error.log{ \n rotate $log.access_maxfiles \n size $log.access_maxsize}  /' /etc/logrotate.conf
 	}
-RELEASE=`cat /etc/redhat-release`
 
-SUBSTR=`echo $RELEASE|cut -c1-22`
 
-if [[ "$SUBSTR" == "CentOS release 7" ]];
+if [[ "$PERMISSION" == "root" ]];
 
 then 
-	echo '===== Detected Centos OS 7.* ======'
-	func_install_centos7
-else 
-	echo '===== Detected Centos OS 6.* ======'
-	func_install_centos6
+	if [[ "$SUBSTR" == "CentOS release 7" ]];
+		then
+			echo '===== Detected Centos OS 7.* ======'
+			func_install_centos7
+	else 
+			echo '===== Detected Centos OS 6.* ======'
+	fi
+else
+	echo '===== Permission Denied ======'
+	exit
 fi
-	
