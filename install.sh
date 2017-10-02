@@ -181,7 +181,9 @@ func_install_centos6(){
 			done
 		echo '===== Start iptables ======'
 		service iptables start
-		
+	#Port webserver 
+		sed -i 's/Listen[[:space:]].*/Listen "$web_port"/' /etc/httpd/conf/http_conf
+		service httpd restart
 	#Folder save log file
 
 		$log_saved
