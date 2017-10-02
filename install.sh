@@ -123,7 +123,7 @@ func_install_centos6(){
 		if [[ "$db_root" == 1 ]];
 			then
 				echo '===== Config SQL ======'
-				echo -e "\ny\ny\n$db_root_pass\n$db_root_pass\ny\ny\ny\ny" | /usr/bin/mysql_secure_installation
+				$ mysqladmin -u root password $db_root_pass
 		fi
 #VWM path : 
 
@@ -132,8 +132,8 @@ func_install_centos6(){
 			mkdir /var/www/html/vwm
 		
 		#Define root path
-		
-			#$VM_path=/var/www/html/vwm
+			sed  -i -e '$a\export $vwm_root=/var/www/html/vwm/' /bashrc
+
 
 #Enable Authentication 
 		if [[ "$web_httpauth" == 1 ]];
@@ -142,7 +142,7 @@ func_install_centos6(){
 				htpasswd -c -b /etc/httpd/_htpasswd $USER @PASSWD
 				sed '/<Directory \/var\/www\html>/,/<\/Directory>/ s/AllowOverride None/AllowOverride AuthConfig/' /etc/httpd/conf/httpd_conf 
 				echo AuthType Basic\nAuthName "Restricted Content"\nAuthUserFile /etc/httpd/_htpasswd\nRequire $USER > /var/www/html/vwm/_htaccess
-				apachectl restart
+				service httpd restart
 		fi
 	
 	#config ssl
@@ -185,11 +185,11 @@ func_install_centos6(){
 		$log_saved
 
 	#Access log name
-
+		echo '===== Logname ======'
 		sed -i -e 's#CustomLog "logs/access_log" combined#CustomLog "logs/$log_access_file" combined#' /etc/httpd/conf/http_conf
 		
 	# Config Logrotate
-
+		echo '===== Config Logrotate ======'
 		sed  -i -e '$a\\n"/var/log/httpd/web_access_log" /var/log/httpd/error_log{ \n rotate $log_access_maxfiles \n size $log_access_maxsize}  /' /etc/logrotate_conf
 	}
 
