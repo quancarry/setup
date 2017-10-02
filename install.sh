@@ -94,6 +94,7 @@ func_install_centos6(){
 	#Enable ssh
 		if [[ "$server_ssh" == 1 ]];
 			then
+				echo '===== Enable SSH ======'
 				#yum -y install openssh-server openssh-clients
 				service sshd start
 		fi
@@ -101,12 +102,14 @@ func_install_centos6(){
 	#Enable Apache
 		if [[ "$server_apache" == 1 ]];
 			then
+				echo '===== Enable Apache ======'
 				#yum -y install httpd
 				service httpd start
 		fi
 	#Enable mysql(mariadb)
 		if [[ "$server_mysql" == 1 ]];
 			then
+				echo '===== Enable MySql ======'
 				#echo [mariadb]\nname = MariaDB\nbaseurl = http://yum_mariadb_org/10_1/centos6-amd64\ngpgkey=https://yum_mariadb_org/RPM-GPG-KEY-MariaDB\ngpgcheck=1 > /etc/yum_repos_d/MariaDB_repo
 				#yum install MariaDB-server MariaDB-client -y
 				service mysqld start
@@ -119,6 +122,7 @@ func_install_centos6(){
 	#config mysql
 		if [[ "$db_root" == 1 ]];
 			then
+				echo '===== Config SQL ======'
 				echo -e "\ny\ny\n$db_root_pass\n$db_root_pass\ny\ny\ny\ny" | /usr/bin/mysql_secure_installation
 		fi
 #VWM path : 
@@ -134,7 +138,7 @@ func_install_centos6(){
 #Enable Authentication 
 		if [[ "$web_httpauth" == 1 ]];
 			then
-				
+				echo '===== Config Authentication ======'
 				htpasswd -c -b /etc/httpd/_htpasswd $USER @PASSWD
 				sed '/<Directory \/var\/www\html>/,/<\/Directory>/ s/AllowOverride None/AllowOverride AuthConfig/' /etc/httpd/conf/httpd_conf 
 				echo AuthType Basic\nAuthName "Restricted Content"\nAuthUserFile /etc/httpd/_htpasswd\nRequire $USER > /var/www/html/vwm/_htaccess
@@ -152,12 +156,14 @@ func_install_centos6(){
 	#Enable _htaccess
 		if [[ "web_htaccess" == 1 ]];
 			then
+				echo '==== Enable .htaccess ======'
 				sed -n -i '/<Directory \/var\/www\/>/,/<\/Directory>/ s/AllowOverride None/AllowOverride all/' /etc/httpd/conf/httpd_conf
 
 		fi
 	#Enable iptables
 		if [[ "fw_enable" == 1 ]];
 			then
+				echo '===== Enable ipatbles ======'
 				service iptables start
 		fi
 	#Iptable allows ports:
@@ -166,11 +172,12 @@ func_install_centos6(){
 		arraylength=${#fw_allow_port[@]}
 
 		# use for loop to read all values and indexes
+		echo '===== Enable Listen port ======'
 		for (( i=1; i<${arraylength}+1; i++ ));
 			do
 			  iptables -A INPUT -p tcp -m tcp --dport ${fw_allow_port[$i]} -j ACCEPT
 			done
-		
+		echo '===== Start iptables ======'
 		service iptables start
 		
 	#Folder save log file
