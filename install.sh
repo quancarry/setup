@@ -207,6 +207,7 @@ then
 			func_install_centos7
 	else 
 			echo '===== Detected Centos OS 6_* ======'
+			func_install_centos6
 	fi
 else
 	echo '===== Permission Denied ======'
