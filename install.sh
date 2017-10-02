@@ -89,8 +89,8 @@ func_install_centos6(){
 
 	#Change hostname
 	echo '===== Set hostname ======'	
-	sed -i "s/HOSTNAME=.*/HOSTNAME=$server_hostname/p" /etc/sysconfig/network
-	sed -i "1 i\127.0.0.1   $server_hostname $server_hostname /p" /etc/hosts
+	sed -n "s/HOSTNAME=.*/HOSTNAME=$server_hostname"/p /etc/sysconfig/network
+	sed -n "1 i\127.0.0.1   $server_hostname $server_hostname/p" /etc/hosts
 	hostname $server_hostname
 		
 	#Enable ssh
@@ -99,6 +99,7 @@ func_install_centos6(){
 				echo '===== Enable SSH ======'
 				#yum -y install openssh-server openssh-clients
 				service sshd start
+				echo service sshd status
 		fi
 		
 	#Enable Apache
