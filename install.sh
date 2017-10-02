@@ -90,7 +90,8 @@ func_install_centos6(){
 	#Change hostname
 	echo '===== Set hostname ======'	
 	sed -n "s/HOSTNAME=.*/HOSTNAME=$server_hostname"/p /etc/sysconfig/network
-	sed -n "1 i\127.0.0.1   $server_hostname $server_hostname/p" /etc/hosts
+	echo "127.0.0.1   $server_hostname $server_hostname" > /etc/hosts
+	cat /etc/hosts | grep "$server_hostname"
 	hostname $server_hostname
 		
 	#Enable ssh
@@ -99,7 +100,7 @@ func_install_centos6(){
 				echo '===== Enable SSH ======'
 				#yum -y install openssh-server openssh-clients
 				service sshd start
-				echo service sshd status
+				service sshd status
 		fi
 		
 	#Enable Apache
@@ -107,8 +108,9 @@ func_install_centos6(){
 			then
 				echo '===== Enable Apache ======'
 				#yum -y install httpd
-				sed -i "s/#ServerName.*/ServerName localhost:$web_port/p" /etc/httpd/conf/http.conf
+				sed - "s/#ServerName.*/ServerName localhost:$web_port/p" /etc/httpd/conf/httpd.conf
 				service httpd start
+				service httpd status
 		fi
 	#Enable mysql(mariadb)
 		if [[ "$server_mysql" == 1 ]];
@@ -121,7 +123,7 @@ func_install_centos6(){
 
 	#install php
 
-		yum -y install php php-mysql
+		#yum -y install php php-mysql
 		
 	#config mysql
 		if [[ "$db_root" == 1 ]];
@@ -144,7 +146,7 @@ func_install_centos6(){
 			then
 				echo '===== Config Authentication ======'
 				htpasswd -c -b /etc/httpd/.htpasswd $USER @PASSWD
-				sed '/<Directory \/var\/www\html>/,/<\/Directory>/ s/AllowOverride None/AllowOverride AuthConfig/' /etc/httpd/conf/httpd.conf 
+				sed -n '/<Directory \/var\/www\html>/,/<\/Directory>/ s/AllowOverride None/AllowOverride AuthConfig/p' /etc/httpd/conf/httpd.conf 
 				echo AuthType Basic\nAuthName "Restricted Content"\nAuthUserFile /etc/httpd/.htpasswd\nRequire $USER > /var/www/html/vwm/.htaccess
 				service httpd restart
 		fi
