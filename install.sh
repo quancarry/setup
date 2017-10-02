@@ -89,8 +89,9 @@ func_install_centos6(){
 
 	#Change hostname
 	echo '===== Set hostname ======'	
-	sed -i 's/HOSTNAME=.*/HOSTNAME="$server_hostname"/' /etc/sysconfig/network
+	sed -i 's/HOSTNAME=.*/HOSTNAME=$server_hostname/' /etc/sysconfig/network
 	sed -i '1 i\127.0.0.1   $server_hostname' /etc/hosts
+	hostname $server_hostname
 	bash
 		
 	#Enable ssh
