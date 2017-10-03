@@ -105,6 +105,8 @@ func_install_centos6(){
 		fi
 		
 	#Enable Apache
+		#Port webserver 
+		sed -i "s/Listen[[:space:]].*/Listen $web_port/" /etc/httpd/conf/http.conf
 		if [[ "$server_apache" == 1 ]];
 			then
 				echo '===== Enable Apache ======'
@@ -180,15 +182,14 @@ func_install_centos6(){
 
 		# use for loop to read all values and indexes
 		echo '===== Enable Listen port ======'
-		for (( i=1; i<${arraylength}+1; i++ ));
+		for (( i=0; i<${arraylength}; i++ ));
 			do
 			  iptables -A INPUT -p tcp -m tcp --dport ${fw_allow_port[$i]} -j ACCEPT
 			done
 		echo '===== Start iptables ======'
-		service iptables start
-	#Port webserver 
-		sed -i "s/Listen[[:space:]].*/Listen $web_port/" /etc/httpd/conf/http.conf
-		service httpd restart
+		service iptables save
+		service iptables restart
+
 	#Folder save log file
 
 		$log_saved
