@@ -167,7 +167,7 @@ installing(){
 		else
 			echo 'Directory really exists . Skip'
 	fi	
-			echo "\n\n\n\n\n" | openssl req -nodes -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -subj '/CN=localhost'
+			echo "\n\n\n\n\n" | openssl req -nodes -x509 -newkey rsa:4096 -keyout $privKeyPath -out $serverCert -days 365 -subj '/CN=localhost'
 			sed -i "s/SSLCertificateFile[[:space:]]\/.*/SSLCertificateFile ${serverCert//\//\\/}/" /etc/httpd/conf.d/ssl.conf
 			sed -i "s/SSLCertificateKeyFile[[:space:]]\/.*/SSLCertificateKeyFile ${privKeyPath//\//\\/}/" /etc/httpd/conf.d/ssl.conf
 			service httpd restart
