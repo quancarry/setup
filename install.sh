@@ -168,7 +168,9 @@ installing(){
 			echo 'Directory really exists . Skip'
 	fi	
 			echo "\n\n\n\n\n" | openssl req -x509 -newkey rsa:4096 -keyout $privKeyPath -out $serverCert -days 365 -subj '/CN=localhost'
-	
+			sed -i "s/SSLCertificateFile[[:space:]]\/.*/$serverCert" /etc/httpd/conf.d/ssl.conf
+			sed -i "s/SSLCertificateKeyFile[[:space:]]\/.*/$privKeyPath" /etc/httpd/conf.d/ssl.conf
+			service httpd restart
 	#Enable _htaccess
 		if [[ "$web_htaccess" == 1 ]];
 			then
