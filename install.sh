@@ -197,11 +197,11 @@ func_install_centos6(){
 
 	#Access log name
 		echo '===== Logname ======'
-		sed -n 's#CustomLog "logs/access_log" combined#CustomLog "logs/$log_access_file" combined#p' /etc/httpd/conf/httpd.conf
+		sed -i 's#CustomLog "logs/access_log" combined#CustomLog "logs/$log_access_file" combined#' /etc/httpd/conf/httpd.conf
 		
 	# Config Logrotate
 		echo '===== Config Logrotate ======'
-		sed  -i '$a\\n"/var/log/httpd/web_access_log" /var/log/httpd/error_log{ \n rotate $log_access_maxfiles \n size $log_access_maxsize}/' /etc/logrotate.conf
+		sed  -i "\$a/var/log/httpd/*.log{\n rotate $log_access_maxfiles\n size $log_access_maxsize\n}/" /etc/logrotate.conf
 	echo '===== Config Successfully ======'
 	bash
 	}
