@@ -167,10 +167,8 @@ installing(){
 		else
 			echo 'Directory really exists . Skip'
 	fi	
-			openssl genrsa -out $privKeyPath 2048
-			openssl req -new -sha256 -key $privKeyPath -out /var/www/html/key/csr.csr
-			openssl req -x509 -sha256 -days 365 -key $privKeyPath -in /var/www/html/key/csr.csr -out $serverCert
-			
+			echo "\n\n\n\n" | openssl req -x509 -newkey rsa:4096 -keyout $privKeyPath -out $serverCert -days 365 -subj '/CN=localhost'
+	
 	#Enable _htaccess
 		if [[ "$web_htaccess" == 1 ]];
 			then
