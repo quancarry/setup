@@ -133,7 +133,7 @@ func_install_centos6(){
 		if [[ "$db_root" == 1 ]];
 			then
 				echo '===== Config SQL ======'
-				$ mysqladmin -u root password $db_root_pass
+				mysqladmin -u root password $db_root_pass
 		fi
 #VWM path : 
 
