@@ -137,7 +137,7 @@ installing(){
 				echo '===== Config SQL ======'
 				mysqladmin -u root password $db_root_pass
 		fi
-#VWM path : 
+	#VWM path : 
 
 		#Create owner dictionary
 		if [ ! -d "/var/www/html/vwm" ]; then
