@@ -92,7 +92,7 @@ echo '===== Set hostname ======'
 	cat /etc/hosts | grep "$server_hostname"
 	hostname $server_hostname
 }
-func_install_centos6(){
+func_install_centos7(){
 hostnamectl set-hostname $server_hostname.com
 }
 installing(){
@@ -167,7 +167,7 @@ installing(){
 		else
 			echo 'Directory really exists . Skip'
 	fi	
-			echo "\n\n\n\n" | openssl req -x509 -newkey rsa:4096 -keyout $privKeyPath -out $serverCert -days 365 -subj '/CN=localhost'
+			echo "\n\n\n\n\n" | openssl req -x509 -newkey rsa:4096 -keyout $privKeyPath -out $serverCert -days 365 -subj '/CN=localhost'
 	
 	#Enable _htaccess
 		if [[ "$web_htaccess" == 1 ]];
