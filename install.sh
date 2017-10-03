@@ -163,14 +163,14 @@ func_install_centos6(){
 	#
 
 	#Enable _htaccess
-		if [[ "web_htaccess" == 1 ]];
+		if [[ "$web_htaccess" == 1 ]];
 			then
 				echo '==== Enable .htaccess ======'
 				sed -i '/<Directory \/>/,/<\/Directory>/ s/AllowOverride None/AllowOverride all/' /etc/httpd/conf/httpd.conf
 
 		fi
 	#Enable iptables
-		if [[ "fw_enable" == 1 ]];
+		if [[ "$fw_enable" == 1 ]];
 			then
 				echo '===== Enable ipatbles ======'
 				service iptables start
