@@ -144,7 +144,7 @@ func_install_centos6(){
 			echo 'Directory really exists . Skip'
 		#Define root path
 			#sed  -i -e '$a\export $vwm_root=/var/www/html/vwm/' /root/.bashrc
-
+		fi
 
 #Enable Authentication 
 		if [[ "$web_httpauth" == 1 ]];
