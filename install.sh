@@ -90,7 +90,7 @@ func_install_centos6(){
 	#Change hostname
 	echo '===== Set hostname ======'	
 	sed -i "s/HOSTNAME=.*/HOSTNAME=$server_hostname"/ /etc/sysconfig/network
-	echo $"127.0.0.1	$server_hostname $server_hostname\n127.0.0.1	localhost localhost.localdomain localhost4 localhost4.localdomain4\n::1	localhost localhost.localdomain localhost6 localhost6.localdomain6" > /etc/hosts
+	printf "127.0.0.1	$server_hostname $server_hostname\n127.0.0.1	localhost localhost.localdomain localhost4 localhost4.localdomain4\n::1	localhost localhost.localdomain localhost6 localhost6.localdomain6" > /etc/hosts
 	cat /etc/hosts | grep "$server_hostname"
 	hostname $server_hostname
 		
@@ -150,7 +150,7 @@ func_install_centos6(){
 				echo '===== Config Authentication ======'
 				htpasswd -c -b /etc/httpd/.htpasswd $USER @PASSWD
 				sed -i '/<Directory \"\/var\/www\/html\">/,/<\/Directory>/ s/AllowOverride None/AllowOverride AuthConfig/' /etc/httpd/conf/httpd.conf 
-				echo $"AuthType Basic\nAuthName "Restricted Content"\nAuthUserFile /etc/httpd/.htpasswd\nRequire $USER" > /var/www/html/vwm/.htaccess
+				printf "AuthType Basic\nAuthName "Restricted Content"\nAuthUserFile /etc/httpd/.htpasswd\nRequire $USER" > /var/www/html/vwm/.htaccess
 				service httpd restart
 		fi
 	
