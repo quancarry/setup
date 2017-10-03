@@ -151,7 +151,7 @@ func_install_centos6(){
 			then
 				echo '===== Config Authentication ======'
 				htpasswd -c -b /etc/httpd/.htpasswd $USER @PASSWD
-				sed -i '/<Directory \"\/var\/www\html\">/,/<\/Directory>/ s/AllowOverride None/AllowOverride AuthConfig/' /etc/httpd/conf/httpd.conf 
+				sed -i '/<Directory \"\/var\/www\/html\">/,/<\/Directory>/ s/AllowOverride None/AllowOverride AuthConfig/' /etc/httpd/conf/httpd.conf 
 				echo AuthType Basic\nAuthName "Restricted Content"\nAuthUserFile /etc/httpd/.htpasswd\nRequire $USER > /var/www/html/vwm/.htaccess
 				service httpd restart
 		fi
