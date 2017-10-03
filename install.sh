@@ -138,9 +138,10 @@ func_install_centos6(){
 #VWM path : 
 
 		#Create owner dictionary
-		
+		if [ ! -d "/var/www/html/vwm" ]; then
 			mkdir /var/www/html/vwm
-		
+		else
+			echo 'Directory really exists . Skip'
 		#Define root path
 			#sed  -i -e '$a\export $vwm_root=/var/www/html/vwm/' /root/.bashrc
 
@@ -150,7 +151,7 @@ func_install_centos6(){
 			then
 				echo '===== Config Authentication ======'
 				htpasswd -c -b /etc/httpd/.htpasswd $USER @PASSWD
-				sed -i '/<Directory \/var\/www\html>/,/<\/Directory>/ s/AllowOverride None/AllowOverride AuthConfig/' /etc/httpd/conf/httpd.conf 
+				sed -i '/<Directory \"\/var\/www\html\">/,/<\/Directory>/ s/AllowOverride None/AllowOverride AuthConfig/' /etc/httpd/conf/httpd.conf 
 				echo AuthType Basic\nAuthName "Restricted Content"\nAuthUserFile /etc/httpd/.htpasswd\nRequire $USER > /var/www/html/vwm/.htaccess
 				service httpd restart
 		fi
@@ -167,7 +168,7 @@ func_install_centos6(){
 		if [[ "web_htaccess" == 1 ]];
 			then
 				echo '==== Enable .htaccess ======'
-				sed -n -i '/<Directory \/var\/www\/>/,/<\/Directory>/ s/AllowOverride None/AllowOverride all/p' /etc/httpd/conf/httpd.conf
+				sed -i '/<Directory \/>/,/<\/Directory>/ s/AllowOverride None/AllowOverride all/' /etc/httpd/conf/httpd.conf
 
 		fi
 	#Enable iptables
