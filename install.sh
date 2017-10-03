@@ -84,16 +84,19 @@ log_error_maxfiles=5
 PERMISSION=`whoami`
 RELEASE=`cat /etc/redhat-release`
 SUBSTR=`echo $RELEASE|cut -c1-22`
-
 func_install_centos6(){
-
-	#Change hostname
-	echo '===== Set hostname ======'	
+echo '===== Set hostname ======'	
 	sed -i "s/HOSTNAME=.*/HOSTNAME=$server_hostname"/ /etc/sysconfig/network
+	sed -n "s/HOSTNAME=.*/HOSTNAME=$server_hostname"/p /etc/sysconfig/network
 	printf "127.0.0.1	$server_hostname $server_hostname\n127.0.0.1	localhost localhost.localdomain localhost4 localhost4.localdomain4\n::1		localhost localhost.localdomain localhost6 localhost6.localdomain6\n" > /etc/hosts
 	cat /etc/hosts | grep "$server_hostname"
 	hostname $server_hostname
-		
+}
+func_install_centos6(){
+hostnamectl set-hostname $server_hostname.com
+}
+installing(){
+
 	#Enable ssh
 		if [[ "$server_ssh" == 1 ]];
 			then
@@ -111,6 +114,7 @@ func_install_centos6(){
 				echo '===== Enable Apache ======'
 				#yum -y install httpd
 				sed -i "s/#ServerName.*/ServerName localhost:$web_port/" /etc/httpd/conf/httpd.conf
+				sed -n "s/ServerName localhost:$web_port//p" /etc/httpd/conf/httpd.conf
 				service httpd start
 				service httpd status
 		fi
@@ -141,7 +145,8 @@ func_install_centos6(){
 		else
 			echo 'Directory really exists . Skip'
 		#Define root path
-			#sed  -i -e '$a\export $vwm_root=/var/www/html/vwm/' /root/.bashrc
+			sed  -i -e "\$a export vwm_root=$vwm_root" /root/.bashrc
+			sed  -n "s/export vwm_root=$vwm_root//p" /root/.bashrc
 		fi
 
 #Enable Authentication 
@@ -150,6 +155,7 @@ func_install_centos6(){
 				echo '===== Config Authentication ======'
 				htpasswd -c -b /etc/httpd/.htpasswd $USER @PASSWD
 				sed -i '/<Directory \"\/var\/www\/html\">/,/<\/Directory>/ s/AllowOverride None/AllowOverride AuthConfig/' /etc/httpd/conf/httpd.conf 
+				sed -n '/<Directory \"\/var\/www\/html\">/,/<\/Directory>/ s/AllowOverride AuthConfig//p' /etc/httpd/conf/httpd.conf 
 				printf "AuthType Basic\nAuthName "Restricted Content"\nAuthUserFile /etc/httpd/.htpasswd\nRequire $USER" > /var/www/html/vwm/.htaccess
 				service httpd restart
 		fi
@@ -170,7 +176,7 @@ func_install_centos6(){
 			then
 				echo '==== Enable .htaccess ======'
 				sed -i '/<Directory \/>/,/<\/Directory>/ s/AllowOverride None/AllowOverride all/' /etc/httpd/conf/httpd.conf
-
+				sed -n '/<Directory \/>/,/<\/Directory>/ s/AllowOverride all//p' /etc/httpd/conf/httpd.conf
 		fi
 	#Enable iptables
 		if [[ "$fw_enable" == 1 ]];
@@ -188,6 +194,7 @@ func_install_centos6(){
 		for (( i=0; i<${arraylength}; i++ ));
 			do
 			  iptables -A INPUT -p tcp -m tcp --dport ${fw_allow_port[$i]} -j ACCEPT
+			  echo "Enable port ${fw_allow_port[$i]}"
 			done
 		echo '===== Start iptables ======'
 		service iptables save
@@ -200,10 +207,11 @@ func_install_centos6(){
 	#Access log name
 		echo '===== Logname ======'
 		sed -i "s/CustomLog logs\/access_log combined/CustomLog logs\/$log_access_file combined/" /etc/httpd/conf/httpd.conf
-		
+		sed -n "s/CustomLog logs\/$log_access_file/p" /etc/httpd/conf/httpd.conf
 	# Config Logrotate
 		echo '===== Config Logrotate ======'
 		sed  -i "\$a/var/log/httpd/*.log{\n rotate $log_access_maxfiles\n size $log_access_maxsize\n}/" /etc/logrotate.conf
+		cat etc/logrotate.conf
 	echo '===== Config Successfully ======'
 	bash
 	}
@@ -216,11 +224,15 @@ then
 		then
 			echo '===== Detected Centos OS 7_* ======'
 			func_install_centos7
-	else 
+			installing
+	fi
+	if [[ "$SUBSTR" == "CentOS release 6" ]];
+		then
 			echo '===== Detected Centos OS 6_* ======'
 			func_install_centos6
+			installing
 	fi
 else
-	echo '===== Permission Denied ======'
+	echo '===== Root permission required. ======'
 	exit
 fi
