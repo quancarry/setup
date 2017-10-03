@@ -89,7 +89,7 @@ func_install_centos6(){
 
 	#Change hostname
 	echo '===== Set hostname ======'	
-	sed -n "s/HOSTNAME=.*/HOSTNAME=$server_hostname"/p /etc/sysconfig/network
+	sed -i "s/HOSTNAME=.*/HOSTNAME=$server_hostname"/ /etc/sysconfig/network
 	echo $"127.0.0.1	$server_hostname $server_hostname
 	127.0.0.1	localhost localhost.localdomain localhost4 localhost4.localdomain4
 	::1	localhost localhost.localdomain localhost6 localhost6.localdomain6" > /etc/hosts
@@ -112,7 +112,7 @@ func_install_centos6(){
 			then
 				echo '===== Enable Apache ======'
 				#yum -y install httpd
-				sed -n "s/#ServerName.*/ServerName localhost:$web_port/p" /etc/httpd/conf/httpd.conf
+				sed -i "s/#ServerName.*/ServerName localhost:$web_port/" /etc/httpd/conf/httpd.conf
 				service httpd start
 				service httpd status
 		fi
@@ -150,7 +150,7 @@ func_install_centos6(){
 			then
 				echo '===== Config Authentication ======'
 				htpasswd -c -b /etc/httpd/.htpasswd $USER @PASSWD
-				sed -n '/<Directory \/var\/www\html>/,/<\/Directory>/ s/AllowOverride None/AllowOverride AuthConfig/p' /etc/httpd/conf/httpd.conf 
+				sed -i '/<Directory \/var\/www\html>/,/<\/Directory>/ s/AllowOverride None/AllowOverride AuthConfig/' /etc/httpd/conf/httpd.conf 
 				echo AuthType Basic\nAuthName "Restricted Content"\nAuthUserFile /etc/httpd/.htpasswd\nRequire $USER > /var/www/html/vwm/.htaccess
 				service httpd restart
 		fi
