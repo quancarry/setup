@@ -146,7 +146,7 @@ installing(){
 			echo 'Directory really exists . Skip'
 		#Define root path
 			sed  -i -e "\$a export vwm_root=$vwm_root" /root/.bashrc
-			sed  -n "s/export vwm_root=$vwm_root//p" /root/.bashrc
+			sed  -n "s/export vwm_root=$vwm_root/ /p" /root/.bashrc
 		fi
 
 #Enable Authentication 
@@ -211,7 +211,7 @@ installing(){
 	# Config Logrotate
 		echo '===== Config Logrotate ======'
 		sed  -i "\$a/var/log/httpd/*.log{\n rotate $log_access_maxfiles\n size $log_access_maxsize\n}/" /etc/logrotate.conf
-		cat etc/logrotate.conf
+		cat /etc/logrotate.conf
 	echo '===== Config Successfully ======'
 	bash
 	}
