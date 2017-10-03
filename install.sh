@@ -48,8 +48,8 @@ PASSWD='12345'
 web_htaccess=1
 
 # SSL certificate files_
-privKeyPath=/var/www/html/key/privkey_pem
-serverCert=/var/www/html/key/cert_pem
+privKeyPath=/var/www/html/key/privkey.pem
+serverCert=/var/www/html/key/cert.pem
 
 #[database]
 # Enable database mysql
@@ -156,12 +156,15 @@ func_install_centos6(){
 	
 	#config ssl
 	#
-	#
-	#
-	#
-	#
-	#
-
+	if [ ! -d "/var/www/html/key" ]; then
+			mkdir	/var/www/html/key
+		else
+			echo 'Directory really exists . Skip'
+	fi	
+			openssl genrsa -out $privKeyPath 2048
+			openssl req -new -sha256 -key $privKeyPath -out /var/www/html/key/csr.csr
+			openssl req -x509 -sha256 -days 365 -key $privKeyPath -in /var/www/html/key/csr.csr -out $serverCert
+			
 	#Enable _htaccess
 		if [[ "$web_htaccess" == 1 ]];
 			then
