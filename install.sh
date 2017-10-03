@@ -90,7 +90,7 @@ func_install_centos6(){
 	#Change hostname
 	echo '===== Set hostname ======'	
 	sed -i "s/HOSTNAME=.*/HOSTNAME=$server_hostname"/ /etc/sysconfig/network
-	printf "127.0.0.1	$server_hostname $server_hostname\n127.0.0.1	localhost localhost.localdomain localhost4 localhost4.localdomain4\n::1	localhost localhost.localdomain localhost6 localhost6.localdomain6" > /etc/hosts
+	printf "127.0.0.1	$server_hostname $server_hostname\n127.0.0.1	localhost localhost.localdomain localhost4 localhost4.localdomain4\n::1		localhost localhost.localdomain localhost6 localhost6.localdomain6\n" > /etc/hosts
 	cat /etc/hosts | grep "$server_hostname"
 	hostname $server_hostname
 		
