@@ -196,7 +196,7 @@ func_install_centos6(){
 
 	#Access log name
 		echo '===== Logname ======'
-		sed -i 's#CustomLog "logs/access_log" combined#CustomLog "logs/$log_access_file" combined#' /etc/httpd/conf/httpd.conf
+		sed -i "s/CustomLog logs\/access_log combined/CustomLog logs\/$log_access_file combined/" /etc/httpd/conf/httpd.conf
 		
 	# Config Logrotate
 		echo '===== Config Logrotate ======'
