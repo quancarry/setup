@@ -83,7 +83,7 @@ log_error_maxfiles=5
 
 PERMISSION=`whoami`
 RELEASE=`cat /etc/redhat-release`
-SUBSTR=`echo $RELEASE|cut -c1-22`
+SUBSTR=`echo $RELEASE|cut -c1-16`
 func_install_centos6(){
 echo '===== Set hostname ======'	
 	sed -i "s/HOSTNAME=.*/HOSTNAME=$server_hostname"/ /etc/sysconfig/network
