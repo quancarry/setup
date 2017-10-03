@@ -107,7 +107,7 @@ func_install_centos6(){
 		
 	#Enable Apache
 		#Port webserver 
-		sed -i "s/Listen[[:space:]].*/Listen $web_port/" /etc/httpd/conf/http.conf
+		sed -i "s/Listen[[:space:]].*/Listen $web_port/" /etc/httpd/conf/httpd.conf
 		if [[ "$server_apache" == 1 ]];
 			then
 				echo '===== Enable Apache ======'
