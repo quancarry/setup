@@ -108,7 +108,7 @@ func_install_centos6(){
 			then
 				echo '===== Enable Apache ======'
 				#yum -y install httpd
-				sed - "s/#ServerName.*/ServerName localhost:$web_port/p" /etc/httpd/conf/httpd.conf
+				sed -n "s/#ServerName.*/ServerName localhost:$web_port/p" /etc/httpd/conf/httpd.conf
 				service httpd start
 				service httpd status
 		fi
