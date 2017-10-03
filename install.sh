@@ -90,7 +90,8 @@ func_install_centos6(){
 	#Change hostname
 	echo '===== Set hostname ======'	
 	sed -n "s/HOSTNAME=.*/HOSTNAME=$server_hostname"/p /etc/sysconfig/network
-	echo "127.0.0.1   $server_hostname $server_hostname" > /etc/hosts
+	echo "127.0.0.1   $server_hostname $server_hostname 127.0.0.1       localhost.localdomain localhost
+::1     localhost6.localdomain6 localhost6" > /etc/hosts
 	cat /etc/hosts | grep "$server_hostname"
 	hostname $server_hostname
 		
@@ -138,7 +139,7 @@ func_install_centos6(){
 			mkdir /var/www/html/vwm
 		
 		#Define root path
-			sed  -i -e '$a\export $vwm_root=/var/www/html/vwm/' /root/.bashrc
+			#sed  -i -e '$a\export $vwm_root=/var/www/html/vwm/' /root/.bashrc
 
 
 #Enable Authentication 
@@ -194,7 +195,7 @@ func_install_centos6(){
 
 	#Access log name
 		echo '===== Logname ======'
-		sed -i -e 's#CustomLog "logs/access_log" combined#CustomLog "logs/$log_access_file" combined#' /etc/httpd/conf/http.conf
+		sed -i -e 's#CustomLog "logs/access_log" combined#CustomLog "logs/$log_access_file" combined#' /etc/httpd/conf/httpd.conf
 		
 	# Config Logrotate
 		echo '===== Config Logrotate ======'
