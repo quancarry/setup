@@ -14,9 +14,13 @@ server_mysql=1
 
 # Enable service php 0|1
 server_php=1
+server_python_version=7
 
 # Enable python env 0|1
+
 server_python=1
+server_python_version=2
+server_python_path=/home/python
 
 # Eet env VWM path; as command: export $VWM=/var/www/html/vwm
 vwm_root=/var/www/html/vwm
@@ -130,7 +134,36 @@ installing(){
 	#install php
 
 		#yum -y install php php-mysql
-		
+	if [[ "$server_python" == 1 ]];
+		then
+			echo '===== Config python env ======'
+
+			PY_VER=`python -c "import sys;ver=sys.version_infor[:3];print("{0}".format(*ver);"`
+			if hash python;
+				then
+						if [[ "$server_python_version" == "2" ]];
+							then
+							 	if [[ "$PY_VER" == "2" ]];
+									then continue
+								else 
+									then 
+										#install down
+								fi
+						fi
+						if [[ "$server_python_version" == "3" ]];
+						then
+							 	if [[ "$PY_VER" == "3" ]];
+									then continue
+								else 
+									then 
+										#install up
+								fi
+						fi
+			else 
+				echo "Python not install"
+			fi
+			#export PATH : = $server_python_path
+	fi
 	#config mysql
 		if [[ "$db_root" == 1 ]];
 			then
