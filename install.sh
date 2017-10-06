@@ -14,8 +14,8 @@ server_mysql=1
 
 # Enable service php 0|1
 server_php=1
-#version 5.3 , 5.6 or 7.0
-server_php_version_minimum=5.3
+#version 5.6 or 7.0
+server_php_version_minimum=56
 
 # Enable python env 0|1
 
@@ -189,7 +189,8 @@ installing(){
 		import_ius_key(){
 			rpm --import /etc/pki/rpm-gpg/IUS-COMMUNITY-GPG-KEY
 		}
-
+	if [[ "$server_php" == 1 ]];
+		then
 		if [[ -e /etc/redhat-release ]]; then
 			RELEASE_RPM=$(rpm -qf /etc/redhat-release)
 			RELEASE=$(rpm -q --qf '%{VERSION}' ${RELEASE_RPM})
@@ -217,7 +218,8 @@ installing(){
 			exit 1
 		fi
 		yum -y remove php-cli mod_php php-common
-		yum -y install php56u-mysqlnd mod_php56u php56u-cli
+		yum -y install php${server_php_version_minimum}u-mysqlnd mod_php${server_php_version_minimum}u php${server_php_version_minimum}u-cli
+	fi
 	if [[ "$server_python" == 1 ]];
 		then
 			echo '===== Config python env ======'
