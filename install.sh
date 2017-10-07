@@ -221,15 +221,7 @@ installing(){
 	if [[ "$server_python" == 1 ]];
 		then
 			echo '===== Config python env ======'
-
-			PY_VER=`python -c "import sys;ver=sys.version_infor[:3];print("{0}".format(*ver);"`
-			if hash python;
-				then
-						
-						if [[ "$PY_VER" < "$server_python_version_minimum" ]];
-						then
-							 #install -python $server_python_version_minimum
-							 RELEASE_RPM=$(rpm -qf /etc/redhat-release)
+			RELEASE_RPM=$(rpm -qf /etc/redhat-release)
 							 RELEASE=$(rpm -q --qf '%{VERSION}' ${RELEASE_RPM})
 							 centos_install_ius(){
 								case ${RELEASE} in
@@ -237,12 +229,22 @@ installing(){
 									7*) yum -y install https://centos7.iuscommunity.org/ius-release.rpm;;
 								esac
 									}
+			PY_VER=`python -c "import sys;ver=sys.version_infor[:3];print("{0}".format(*ver);"`
+			if hash python;
+				then
+						
+						if [[ "$PY_VER" < "$server_python_version_minimum" ]];
+						then
+							 #install -python $server_python_version_minimum
+							 
 							  centos_install_ius
 							  yum -y install python${server_python_version_minimum}u
 							  yum -y install python${server_python_version_minimum}u-devel
 						fi
 			else 
-				#install -python $server_python_version_minimum
+				centos_install_ius
+				yum -y install python${server_python_version_minimum}u
+				yum -y install python${server_python_version_minimum}u-devel
 			fi
 			#export PATH : = $server_python_path
 	fi
