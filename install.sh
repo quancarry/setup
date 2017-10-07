@@ -22,7 +22,11 @@ server_php_version_minimum=70
 server_python=1
 #version recommended is 2.6,2.7 or 3.6
 server_python_version_minimum=36
-server_python_path=/home/python
+py_mini_1=`echo $server_python_version_minimum | cut -c 1`
+py_mini_2=`echo $server_python_version_minimum | cut -c 2`
+#alias example : py3="/usr/bin/python3.6"
+alias_name=py3
+alias_value="/usr/bin/python$py_mini_1.$py_mini_2"
 
 # Eet env VWM path; as command: export $VWM=/var/www/html/vwm
 vwm_root=/var/www/html/vwm
