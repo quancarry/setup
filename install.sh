@@ -189,7 +189,7 @@ installing(){
 		}
 	if [[ "$server_php" == 1 ]];
 		then
-		$PHP_VER=`php -v | grep "PHP [0-9]|cut 5,7"`
+		$PHP_VER=`php -v | grep "PHP [0-9]"|cut -c 5,7`
 		if [[ "$PHP_VER" < "$server_php_version_minimum" ]];
 		then
 			if [[ -e /etc/redhat-release ]]; then
