@@ -192,6 +192,7 @@ installing(){
 		PHP_VER=`php -v | grep "PHP [0-9]"|cut -c 5,7`
 		if [[ "$PHP_VER" < "$server_php_version_minimum" ]];
 		then
+			echo '===== Installing epel lastest & ius ======'
 			if [[ -e /etc/redhat-release ]]; then
 				RELEASE_RPM=$(rpm -qf /etc/redhat-release)
 				RELEASE=$(rpm -q --qf '%{VERSION}' ${RELEASE_RPM})
@@ -218,7 +219,9 @@ installing(){
 				echo "not an EL distro"
 				exit 1
 			fi
+		echo '===== Remove old php ======'
 		yum -y remove php-cli mod_php php-common
+		echo '===== Installing php version $server_php_version_minimum ======'
 		yum -y install php${server_php_version_minimum}u-mysqlnd mod_php${server_php_version_minimum}u php${server_php_version_minimum}u-cli
 		else
 		echo '===== Php version is suitable . Skip ======'
@@ -235,13 +238,15 @@ installing(){
 									7*) yum -y install https://centos7.iuscommunity.org/ius-release.rpm;;
 								esac
 									}
-			PY_VER=`python -c "import sys;ver=sys.version_infor[:3];print("{0}".format(*ver));"`
+			
+			
 			if hash python;
 				then
-						
+					PY_VER=`python -c "import sys;ver=sys.version_infor[:3];print('{0}{1}'.format(*ver));"`
+					echo '===== Detected Python ver  $PY_VER ======'
 						if [[ "$PY_VER" < "$server_python_version_minimum" ]];
 						then
-							 #install -python $server_python_version_minimum
+							 echo '===== Installing python ver $server_python_version_minimum ======'
 							 
 							  centos_install_ius
 							  yum -y install python${server_python_version_minimum}u
@@ -250,6 +255,8 @@ installing(){
 						echo '===== Python version is suitable . Skip ======'
 						fi
 			else 
+			echo '===== Python not installed . ======'
+			echo '===== Installing python ver $server_python_version_minimum ======'
 				centos_install_ius
 				yum -y install python${server_python_version_minimum}u
 				yum -y install python${server_python_version_minimum}u-devel
