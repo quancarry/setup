@@ -242,7 +242,7 @@ installing(){
 			
 			if hash python;
 				then
-					PY_VER=`python -c "import sys;ver=sys.version_infor[:3];print('{0}{1}'.format(*ver));"`
+					PY_VER=`python -c "import sys;ver=sys.version_info[:3];print('{0}{1}'.format(*ver));"`
 					echo '===== Detected Python ver  $PY_VER ======'
 						if [[ "$PY_VER" < "$server_python_version_minimum" ]];
 						then
