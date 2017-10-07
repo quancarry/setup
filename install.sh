@@ -20,7 +20,8 @@ server_php_version_minimum=56
 # Enable python env 0|1
 
 server_python=1
-server_python_version=2
+#version recommended is 2.6,2.7 or 3.6
+server_python_version_minimum=2
 server_python_path=/home/python
 
 # Eet env VWM path; as command: export $VWM=/var/www/html/vwm
@@ -33,10 +34,7 @@ fw_enable=1
 # List open ports
 declare -a fw_allow_port=("80" "22" "443" "514")
 
-
 #[web_config]
-# Enable/disable the appserver
-web_server=1
 
 # This is the port used for both SSL and non-SSL (we only have 1 port now)_
 web_port=80
@@ -227,26 +225,16 @@ installing(){
 			PY_VER=`python -c "import sys;ver=sys.version_infor[:3];print("{0}".format(*ver);"`
 			if hash python;
 				then
-						if [[ "$server_python_version" == "2" ]];
-							then
-							 	if [[ "$PY_VER" == "2" ]];
-									then continue
-								else 
-									then 
-										#install down
-								fi
-						fi
-						if [[ "$server_python_version" == "3" ]];
+						
+						if [[ "$PY_VER" < "$server_python_version_minimum" ]];
 						then
-							 	if [[ "$PY_VER" == "3" ]];
-									then continue
-								else 
-									then 
-										#install up
-								fi
+							 #install -python $server_python_version_minimum
+							 yum -y install https://centos6.iuscommunity.org/ius-release.rpm
+							  yum -y install python${server_python_version_minimum}u
+							  yum -y install python${server_python_version_minimum}u-devel
 						fi
 			else 
-				echo "Python not install"
+				#install -python $server_python_version_minimum
 			fi
 			#export PATH : = $server_python_path
 	fi
