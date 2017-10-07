@@ -15,13 +15,13 @@ server_mysql=1
 # Enable service php 0|1
 server_php=1
 #version 5.6 or 7.0
-server_php_version_minimum=56
+server_php_version_minimum=70
 
 # Enable python env 0|1
 
 server_python=1
 #version recommended is 2.6,2.7 or 3.6
-server_python_version_minimum=2
+server_python_version_minimum=36
 server_python_path=/home/python
 
 # Eet env VWM path; as command: export $VWM=/var/www/html/vwm
