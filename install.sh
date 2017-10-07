@@ -229,7 +229,15 @@ installing(){
 						if [[ "$PY_VER" < "$server_python_version_minimum" ]];
 						then
 							 #install -python $server_python_version_minimum
-							 yum -y install https://centos6.iuscommunity.org/ius-release.rpm
+							 RELEASE_RPM=$(rpm -qf /etc/redhat-release)
+							 RELEASE=$(rpm -q --qf '%{VERSION}' ${RELEASE_RPM})
+							 centos_install_ius(){
+								case ${RELEASE} in
+									6*) yum -y install https://centos6.iuscommunity.org/ius-release.rpm;;
+									7*) yum -y install https://centos7.iuscommunity.org/ius-release.rpm;;
+								esac
+									}
+							  centos_install_ius
 							  yum -y install python${server_python_version_minimum}u
 							  yum -y install python${server_python_version_minimum}u-devel
 						fi
