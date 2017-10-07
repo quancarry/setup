@@ -189,34 +189,40 @@ installing(){
 		}
 	if [[ "$server_php" == 1 ]];
 		then
-		if [[ -e /etc/redhat-release ]]; then
-			RELEASE_RPM=$(rpm -qf /etc/redhat-release)
-			RELEASE=$(rpm -q --qf '%{VERSION}' ${RELEASE_RPM})
-			case ${RELEASE_RPM} in
-				centos*)
-					echo "detected CentOS ${RELEASE}"
-					supported_version_check
-					centos_install_epel
-					centos_install_ius
-					;;
-				redhat*)
-					echo "detected RHEL ${RELEASE}"
-					supported_version_check
-					rhel_install_epel
-					rhel_install_ius
-					;;
-				*)
-					echo "unknown EL clone"
-					exit 1
-					;;
-			esac
+		$PHP_VER=`php -v | grep "PHP [0-9]|cut 5,7"`
+		if [[ "$PHP_VER" < "$server_php_version_minimum" ]];
+		then
+			if [[ -e /etc/redhat-release ]]; then
+				RELEASE_RPM=$(rpm -qf /etc/redhat-release)
+				RELEASE=$(rpm -q --qf '%{VERSION}' ${RELEASE_RPM})
+				case ${RELEASE_RPM} in
+					centos*)
+						echo "detected CentOS ${RELEASE}"
+						supported_version_check
+						centos_install_epel
+						centos_install_ius
+						;;
+					redhat*)
+						echo "detected RHEL ${RELEASE}"
+						supported_version_check
+						rhel_install_epel
+						rhel_install_ius
+						;;
+					*)
+						echo "unknown EL clone"
+						exit 1
+						;;
+				esac
 
-		else
-			echo "not an EL distro"
-			exit 1
-		fi
+			else
+				echo "not an EL distro"
+				exit 1
+			fi
 		yum -y remove php-cli mod_php php-common
 		yum -y install php${server_php_version_minimum}u-mysqlnd mod_php${server_php_version_minimum}u php${server_php_version_minimum}u-cli
+		else
+		echo '===== Php version is suitable . Skip ======'
+		fi
 	fi
 	if [[ "$server_python" == 1 ]];
 		then
@@ -229,7 +235,7 @@ installing(){
 									7*) yum -y install https://centos7.iuscommunity.org/ius-release.rpm;;
 								esac
 									}
-			PY_VER=`python -c "import sys;ver=sys.version_infor[:3];print("{0}".format(*ver);"`
+			PY_VER=`python -c "import sys;ver=sys.version_infor[:3];print("{0}".format(*ver));"`
 			if hash python;
 				then
 						
@@ -240,6 +246,8 @@ installing(){
 							  centos_install_ius
 							  yum -y install python${server_python_version_minimum}u
 							  yum -y install python${server_python_version_minimum}u-devel
+						else 
+						echo '===== Python version is suitable . Skip ======'
 						fi
 			else 
 				centos_install_ius
