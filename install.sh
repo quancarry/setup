@@ -91,19 +91,21 @@ log_error_maxfiles=5
 PERMISSION=`whoami`
 RELEASE=`cat /etc/redhat-release`
 SUBSTR=`echo $RELEASE|cut -c1-16`
-func_install_centos6(){
-echo '===== Set hostname ======'	
-	sed -i "s/HOSTNAME=.*/HOSTNAME=$server_hostname"/ /etc/sysconfig/network
+
+installing(){
+			echo '===== Config Hostname ======'
+			RELEASE_RPM=$(rpm -qf /etc/redhat-release)
+							 RELEASE=$(rpm -q --qf '%{VERSION}' ${RELEASE_RPM})
+							 change_hostname(){
+								case ${RELEASE} in
+									6*) sed -i "s/HOSTNAME=.*/HOSTNAME=$server_hostname"/ /etc/sysconfig/network
 	sed -n "s/HOSTNAME=.*/HOSTNAME=$server_hostname"/p /etc/sysconfig/network
 	printf "127.0.0.1	$server_hostname $server_hostname\n127.0.0.1	localhost localhost.localdomain localhost4 localhost4.localdomain4\n::1		localhost localhost.localdomain localhost6 localhost6.localdomain6\n" > /etc/hosts
 	cat /etc/hosts | grep "$server_hostname"
-	hostname $server_hostname
-}
-func_install_centos7(){
-hostnamectl set-hostname $server_hostname.com
-}
-installing(){
-
+	hostname $server_hostname;;
+									7*) hostnamectl set-hostname $server_hostname.com;;
+								esac
+									}
 	#Enable ssh
 		if [[ "$server_ssh" == 1 ]];
 			then
@@ -367,13 +369,11 @@ then
 	if [[ "$SUBSTR" == "CentOS release 7" ]];
 		then
 			echo '===== Detected Centos OS 7_* ======'
-			func_install_centos7
 			installing
 	fi
 	if [[ "$SUBSTR" == "CentOS release 6" ]];
 		then
 			echo '===== Detected Centos OS 6_* ======'
-			func_install_centos6
 			installing
 	fi
 else
