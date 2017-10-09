@@ -68,11 +68,10 @@ db_root_pass=abc@123
 
 
 #[log_config]
-# folder save log file
-log_saved=/var/log/http
+
 
 # HTTP access log filename
-log_access_file=web_access_log
+log_access_file=web_access.log
 
 # Maximum file size of the access log, in bytes
 log_access_maxsize=25000000
@@ -287,11 +286,11 @@ installing(){
 			mkdir /var/www/html/vwm
 		else
 			echo 'Directory really exists . Skip'
-		#Define root path
-			sed  -i  "$a\ export vwm_root=$vwm_root" ~/.bashrc
-			sed  -n "s/export vwm_root=$vwm_root/ /p" ~/.bashrc
+		
 		fi
-
+	#Define root path
+			sed  -i  "\$a export vwm_root=$vwm_root" ~/.bashrc
+			
 #Enable Authentication 
 		if [[ "$web_httpauth" == 1 ]];
 			then
