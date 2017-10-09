@@ -232,7 +232,7 @@ installing(){
 							  yum -y install python${server_python_version_minimum}u
 							  yum -y install python${server_python_version_minimum}u-devel
 							  sed -i "\$a alias ${alias_name}='/usr/bin/python${py_mini_1}.${py_mini_2}'" ~/.bashrc
-							  bash
+							 
 						else 
 						echo '===== Python version is suitable . Skip ======'
 						fi
