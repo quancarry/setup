@@ -22,9 +22,8 @@ server_php_version_minimum=70
 server_python=1
 #version recommended is 2.6,2.7 or 3.6
 server_python_version_minimum=36
-py_mini_1=`echo $server_python_version_minimum | cut -c 1`
-py_mini_2=`echo $server_python_version_minimum | cut -c 2`
-#alias example : py3="/usr/bin/python3.6"
+
+#alias name to call python custom"
 alias_name=py3
 
 # Eet env VWM path; as command: export $VWM=/var/www/html/vwm
@@ -90,6 +89,8 @@ log_error_maxfiles=5
 PERMISSION=`whoami`
 RELEASE=`cat /etc/redhat-release`
 SUBSTR=`echo $RELEASE|cut -c1-16`
+py_mini_1=`echo $server_python_version_minimum | cut -c 1`
+py_mini_2=`echo $server_python_version_minimum | cut -c 2`
 
 installing(){
 	#disable refresh-packagekit
