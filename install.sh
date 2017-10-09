@@ -109,36 +109,7 @@ installing(){
 								esac
 									}
 	change_hostname
-	#Enable ssh
-		if [[ "$server_ssh" == 1 ]];
-			then
-				echo '===== Enable SSH ======'
-				#yum -y install openssh-server openssh-clients
-				service sshd start
-				service sshd status
-		fi
-		
-	#Enable Apache
-		#Port webserver 
-		sed -i "s/Listen[[:space:]].*/Listen $web_port/" /etc/httpd/conf/httpd.conf
-		if [[ "$server_apache" == 1 ]];
-			then
-				echo '===== Enable Apache ======'
-				#yum -y install httpd
-				sed -i "s/#ServerName.*/ServerName localhost:$web_port/" /etc/httpd/conf/httpd.conf
-				sed -n "s/ServerName localhost:$web_port//p" /etc/httpd/conf/httpd.conf
-				service httpd start
-				service httpd status
-		fi
-	#Enable mysql(mariadb)
-		if [[ "$server_mysql" == 1 ]];
-			then
-				echo '===== Enable MySql ======'
-				#echo [mariadb]\nname = MariaDB\nbaseurl = http://yum_mariadb_org/10_1/centos6-amd64\ngpgkey=https://yum_mariadb_org/RPM-GPG-KEY-MariaDB\ngpgcheck=1 > /etc/yum_repos_d/MariaDB_repo
-				#yum install MariaDB-server MariaDB-client -y
-				service mysqld start
-		fi
-
+	
 	#install php
 
 		#yum -y install php php-mysql
@@ -275,6 +246,34 @@ installing(){
 			fi
 			#export PATH : = $server_python_path
 	fi
+	#Enable ssh
+		if [[ "$server_ssh" == 1 ]];
+			then
+				echo '===== Enable SSH ======'
+				#yum -y install openssh-server openssh-clients
+				service sshd start
+				service sshd status
+		fi
+		
+	#Enable Apache
+		#Port webserver 
+		sed -i "s/Listen[[:space:]].*/Listen $web_port/" /etc/httpd/conf/httpd.conf
+		if [[ "$server_apache" == 1 ]];
+			then
+				echo '===== Enable Apache ======'
+				#yum -y install httpd
+				sed -i "s/#ServerName.*/ServerName localhost:$web_port/" /etc/httpd/conf/httpd.conf
+				sed -n "s/ServerName localhost:$web_port//p" /etc/httpd/conf/httpd.conf
+		fi
+	#Enable mysql(mariadb)
+		if [[ "$server_mysql" == 1 ]];
+			then
+				echo '===== Enable MySql ======'
+				#echo [mariadb]\nname = MariaDB\nbaseurl = http://yum_mariadb_org/10_1/centos6-amd64\ngpgkey=https://yum_mariadb_org/RPM-GPG-KEY-MariaDB\ngpgcheck=1 > /etc/yum_repos_d/MariaDB_repo
+				#yum install MariaDB-server MariaDB-client -y
+				service mysqld start
+		fi
+
 	#config mysql
 		if [[ "$db_root" == 1 ]];
 			then
@@ -300,8 +299,12 @@ installing(){
 				htpasswd -c -b /etc/httpd/.htpasswd $USER @PASSWD
 				sed -i '/<Directory \"\/var\/www\/html\">/,/<\/Directory>/ s/AllowOverride None/AllowOverride AuthConfig/' /etc/httpd/conf/httpd.conf 
 				sed -n '/<Directory \"\/var\/www\/html\">/,/<\/Directory>/ s/AllowOverride AuthConfig//p' /etc/httpd/conf/httpd.conf 
-				printf "AuthType Basic\nAuthName "Restricted Content"\nAuthUserFile /etc/httpd/.htpasswd\nRequire $USER" > /var/www/html/vwm/.htaccess
-				service httpd restart
+				printf "AuthType Basic
+AuthName \"Restricted Content\"
+AuthUserFile /etc/httpd/.htpasswd
+Require valid-user
+" > /var/www/html/vwm/.htaccess
+				
 		fi
 	
 	#config ssl
@@ -323,7 +326,7 @@ installing(){
 					echo "\n\n\n\n\n" | openssl req -nodes -x509 -newkey rsa:4096 -keyout $privKeyPath -out $serverCert -days 365 -subj '/CN=localhost'
 					sed -i "s/SSLCertificateFile[[:space:]]\/.*/SSLCertificateFile ${serverCert//\//\\/}/" /etc/httpd/conf.d/ssl.conf
 					sed -i "s/SSLCertificateKeyFile[[:space:]]\/.*/SSLCertificateKeyFile ${privKeyPath//\//\\/}/" /etc/httpd/conf.d/ssl.conf
-					service httpd restart
+					
 				else
 					echo '==== Install ssl_mod ======'
 					yum -y install mod_ssl
@@ -332,7 +335,7 @@ installing(){
 					echo "\n\n\n\n\n" | openssl req -nodes -x509 -newkey rsa:4096 -keyout $privKeyPath -out $serverCert -days 365 -subj '/CN=localhost'
 					sed -i "s/SSLCertificateFile[[:space:]]\/.*/SSLCertificateFile ${serverCert//\//\\/}/" /etc/httpd/conf.d/ssl.conf
 					sed -i "s/SSLCertificateKeyFile[[:space:]]\/.*/SSLCertificateKeyFile ${privKeyPath//\//\\/}/" /etc/httpd/conf.d/ssl.conf
-					service httpd restart
+					
 				fi
 		fi
 	#Enable _htaccess
@@ -376,11 +379,14 @@ installing(){
 		echo '===== Config Logrotate ======'
 		sed  -i "\$a/var/log/httpd/*.log{\n rotate $log_access_maxfiles\n size $log_access_maxsize\n}/" /etc/logrotate.conf
 		cat /etc/logrotate.conf
+		
+	#restart service
+	service httpd restart
+
 	echo '===== Config Successfully ======'
 	bash
 	}
-
-
+	
 if [[ "$PERMISSION" == "root" ]];
 
 then 
