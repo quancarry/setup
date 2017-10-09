@@ -288,8 +288,8 @@ installing(){
 		else
 			echo 'Directory really exists . Skip'
 		#Define root path
-			sed  -i -e "\$a export vwm_root=$vwm_root" /root/.bashrc
-			sed  -n "s/export vwm_root=$vwm_root/ /p" /root/.bashrc
+			sed  -i  "$a\ export vwm_root=$vwm_root" ~/.bashrc
+			sed  -n "s/export vwm_root=$vwm_root/ /p" ~/.bashrc
 		fi
 
 #Enable Authentication 
@@ -339,7 +339,7 @@ installing(){
 			then
 				echo '==== Enable .htaccess ======'
 				sed -i '/<Directory \/>/,/<\/Directory>/ s/AllowOverride None/AllowOverride all/' /etc/httpd/conf/httpd.conf
-				sed -n '/<Directory \/>/,/<\/Directory>/ s/AllowOverride all//p' /etc/httpd/conf/httpd.conf
+				
 		fi
 	#Enable iptables
 		if [[ "$fw_enable" == 1 ]];
