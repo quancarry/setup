@@ -296,15 +296,26 @@ installing(){
 		if [[ "$web_httpauth" == 1 ]];
 			then
 				echo '===== Config Authentication ======'
-				htpasswd -c -b /etc/httpd/.htpasswd $USER @PASSWD
-				sed -i '/<Directory \"\/var\/www\/html\">/,/<\/Directory>/ s/AllowOverride None/AllowOverride AuthConfig/' /etc/httpd/conf/httpd.conf 
-				sed -n '/<Directory \"\/var\/www\/html\">/,/<\/Directory>/ s/AllowOverride AuthConfig//p' /etc/httpd/conf/httpd.conf 
-				printf "AuthType Basic
-AuthName \"Restricted Content\"
-AuthUserFile /etc/httpd/.htpasswd
-Require valid-user
-" > /var/www/html/vwm/.htaccess
-				
+				if [[ ! -e /etc/httpd/.htpasswd ]];
+				then
+					htpasswd -c -b /etc/httpd/.htpasswd $USER $PASSWD
+					sed -i '/<Directory \"\/var\/www\/html\">/,/<\/Directory>/ s/AllowOverride None/AllowOverride AuthConfig/' /etc/httpd/conf/httpd.conf 
+					sed -n '/<Directory \"\/var\/www\/html\">/,/<\/Directory>/ s/AllowOverride AuthConfig//p' /etc/httpd/conf/httpd.conf 
+					printf "AuthType Basic
+	AuthName \"Restricted Content\"
+	AuthUserFile /etc/httpd/.htpasswd
+	Require valid-user
+	" > /var/www/html/vwm/.htaccess
+				else 
+				htpasswd -b /etc/httpd/.htpasswd $USER $PASSWD
+					sed -i '/<Directory \"\/var\/www\/html\">/,/<\/Directory>/ s/AllowOverride None/AllowOverride AuthConfig/' /etc/httpd/conf/httpd.conf 
+					sed -n '/<Directory \"\/var\/www\/html\">/,/<\/Directory>/ s/AllowOverride AuthConfig//p' /etc/httpd/conf/httpd.conf 
+					printf "AuthType Basic
+	AuthName \"Restricted Content\"
+	AuthUserFile /etc/httpd/.htpasswd
+	Require valid-user
+	" > /var/www/html/vwm/.htaccess
+				fi
 		fi
 	
 	#config ssl
