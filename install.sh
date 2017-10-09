@@ -289,7 +289,7 @@ installing(){
 		
 		fi
 	#Define root path
-			sed  -i  "\$a export vwm_root=$vwm_root" ~/.bashrc
+		export vwm_root=$vwm_root
 			
 #Enable Authentication 
 		if [[ "$web_httpauth" == 1 ]];
