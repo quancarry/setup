@@ -366,7 +366,7 @@ installing(){
 	#Access log name
 		echo '===== Logname ======'
 		sed -i "s/CustomLog logs\/access_log combined/CustomLog logs\/$log_access_file combined/" /etc/httpd/conf/httpd.conf
-		sed -n "s/CustomLog logs\/$log_access_file/p" /etc/httpd/conf/httpd.conf
+		
 	# Config Logrotate
 		echo '===== Config Logrotate ======'
 		sed  -i "\$a/var/log/httpd/*.log{\n rotate $log_access_maxfiles\n size $log_access_maxsize\n}/" /etc/logrotate.conf
