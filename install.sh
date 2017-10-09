@@ -44,7 +44,7 @@ declare -a fw_allow_port=("80" "22" "443" "514")
 web_port=80
 
 # This determines whether to start web in http or https 0|1
-web_ssl=0
+web_ssl=1
 
 # Enable HTTP AUTH 0|1
 web_httpauth=1
@@ -260,6 +260,7 @@ installing(){
 							  centos_install_ius
 							  yum -y install python${server_python_version_minimum}u
 							  yum -y install python${server_python_version_minimum}u-devel
+							  sed -i "$a\ alias ${alias_name}=${alias_value}" ~/.bashrc
 						else 
 						echo '===== Python version is suitable . Skip ======'
 						fi
@@ -269,6 +270,7 @@ installing(){
 				centos_install_ius
 				yum -y install python${server_python_version_minimum}u
 				yum -y install python${server_python_version_minimum}u-devel
+				sed -i "$a\ alias ${alias_name}=${alias_value}" ~/.bashrc
 			fi
 			#export PATH : = $server_python_path
 	fi
@@ -314,22 +316,22 @@ installing(){
 				#Shutdown listen 443
 			else
 				if [ -e '/etc/httpd/conf.d/ssl.conf' ]
-				then
-				echo '==== Enable SSL Self-Certificate ======'
-				#Shutdown listen 80
-				echo "\n\n\n\n\n" | openssl req -nodes -x509 -newkey rsa:4096 -keyout $privKeyPath -out $serverCert -days 365 -subj '/CN=localhost'
-				sed -i "s/SSLCertificateFile[[:space:]]\/.*/SSLCertificateFile ${serverCert//\//\\/}/" /etc/httpd/conf.d/ssl.conf
-				sed -i "s/SSLCertificateKeyFile[[:space:]]\/.*/SSLCertificateKeyFile ${privKeyPath//\//\\/}/" /etc/httpd/conf.d/ssl.conf
-				service httpd restart
+					then
+					echo '==== Enable SSL Self-Certificate ======'
+					#Shutdown listen 80
+					echo "\n\n\n\n\n" | openssl req -nodes -x509 -newkey rsa:4096 -keyout $privKeyPath -out $serverCert -days 365 -subj '/CN=localhost'
+					sed -i "s/SSLCertificateFile[[:space:]]\/.*/SSLCertificateFile ${serverCert//\//\\/}/" /etc/httpd/conf.d/ssl.conf
+					sed -i "s/SSLCertificateKeyFile[[:space:]]\/.*/SSLCertificateKeyFile ${privKeyPath//\//\\/}/" /etc/httpd/conf.d/ssl.conf
+					service httpd restart
 				else
-				echo '==== Install ssl_mod ======'
-				yum -y install mod_ssl
-				echo '==== Enable SSL Self-Certificate ======'
-				#Shutdown listen 80
-				echo "\n\n\n\n\n" | openssl req -nodes -x509 -newkey rsa:4096 -keyout $privKeyPath -out $serverCert -days 365 -subj '/CN=localhost'
-				sed -i "s/SSLCertificateFile[[:space:]]\/.*/SSLCertificateFile ${serverCert//\//\\/}/" /etc/httpd/conf.d/ssl.conf
-				sed -i "s/SSLCertificateKeyFile[[:space:]]\/.*/SSLCertificateKeyFile ${privKeyPath//\//\\/}/" /etc/httpd/conf.d/ssl.conf
-				service httpd restart
+					echo '==== Install ssl_mod ======'
+					yum -y install mod_ssl
+					echo '==== Enable SSL Self-Certificate ======'
+					#Shutdown listen 80
+					echo "\n\n\n\n\n" | openssl req -nodes -x509 -newkey rsa:4096 -keyout $privKeyPath -out $serverCert -days 365 -subj '/CN=localhost'
+					sed -i "s/SSLCertificateFile[[:space:]]\/.*/SSLCertificateFile ${serverCert//\//\\/}/" /etc/httpd/conf.d/ssl.conf
+					sed -i "s/SSLCertificateKeyFile[[:space:]]\/.*/SSLCertificateKeyFile ${privKeyPath//\//\\/}/" /etc/httpd/conf.d/ssl.conf
+					service httpd restart
 				fi
 		fi
 	#Enable _htaccess
