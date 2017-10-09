@@ -228,7 +228,7 @@ installing(){
 			fi
 		echo '===== Remove old php ======'
 		yum -y remove php-cli mod_php php-common
-		echo '===== Installing php version $server_php_version_minimum ======'
+		echo "===== Installing php version $server_php_version_minimum ======"
 		yum -y install php${server_php_version_minimum}u-mysqlnd mod_php${server_php_version_minimum}u php${server_php_version_minimum}u-cli
 		else
 		echo '===== Php version is suitable . Skip ======'
@@ -250,10 +250,10 @@ installing(){
 			if hash python;
 				then
 					PY_VER=`python -c "import sys;ver=sys.version_info[:3];print('{0}{1}'.format(*ver));"`
-					echo '===== Detected Python ver  $PY_VER ======'
+					echo "===== Detected Python ver  $PY_VER ======"
 						if [[ "$PY_VER" < "$server_python_version_minimum" ]];
 						then
-							 echo '===== Installing python ver $server_python_version_minimum ======'
+							 echo "===== Installing python ver $server_python_version_minimum ======"
 							 
 							  centos_install_ius
 							  yum -y install python${server_python_version_minimum}u
@@ -263,7 +263,7 @@ installing(){
 						fi
 			else 
 			echo '===== Python not installed . ======'
-			echo '===== Installing python ver $server_python_version_minimum ======'
+			echo "===== Installing python ver $server_python_version_minimum ======"
 				centos_install_ius
 				yum -y install python${server_python_version_minimum}u
 				yum -y install python${server_python_version_minimum}u-devel
