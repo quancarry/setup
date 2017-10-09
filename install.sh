@@ -26,7 +26,6 @@ py_mini_1=`echo $server_python_version_minimum | cut -c 1`
 py_mini_2=`echo $server_python_version_minimum | cut -c 2`
 #alias example : py3="/usr/bin/python3.6"
 alias_name=py3
-alias_value="/usr/bin/python$py_mini_1.$py_mini_2"
 
 # Eet env VWM path; as command: export $VWM=/var/www/html/vwm
 vwm_root=/var/www/html/vwm
@@ -260,7 +259,8 @@ installing(){
 							  centos_install_ius
 							  yum -y install python${server_python_version_minimum}u
 							  yum -y install python${server_python_version_minimum}u-devel
-							  sed -i "$a\ alias ${alias_name}=${alias_value}" ~/.bashrc
+							  sed -i "$a\alias ${alias_name}='/usr/bin/python${py_mini_1}.${py_mini_2}'" ~/.bashrc
+							  bash
 						else 
 						echo '===== Python version is suitable . Skip ======'
 						fi
