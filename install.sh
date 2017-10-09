@@ -94,7 +94,7 @@ SUBSTR=`echo $RELEASE|cut -c1-16`
 
 installing(){
 	#disable refresh-packagekit
-	sed -i 's/enable=.*/enable=0/' /etc/yum/pluginconf.d/refresh-packagekit.conf
+	sed -i 's/enabled=.*/enabled=0/' /etc/yum/pluginconf.d/refresh-packagekit.conf
 			echo '===== Config Hostname ======'
 			RELEASE_RPM=$(rpm -qf /etc/redhat-release)
 							 RELEASE=$(rpm -q --qf '%{VERSION}' ${RELEASE_RPM})
